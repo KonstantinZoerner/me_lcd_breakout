@@ -53,9 +53,6 @@ void setup() {
 
 void loop() {
   rand_malen();
-<<<<<<< Updated upstream
   maleBallNeu();
-=======
   delay(100);
->>>>>>> Stashed changes
 }
