@@ -1,13 +1,14 @@
 #include <MeAuriga.h>
 #include <SoftwareSerial.h>
 
-MeSerial mySerial(PORT_5);
+MeSerial serial(PORT_5);
 
 #define ANZEIGE_BREITE 240
 #define ANZEIGE_HOEHE  320
 #define RAND_BREITE 2
 
 #define BALL_GROESSE 10
+#define BALL_RADIUS  5
 #define BALL_FARBE   2
 
 int ball_pos_x;
@@ -22,8 +23,8 @@ int ball_ry;
 char buffer[80];
 
 void maleBallNeu() {
-    sprintf(buffer, "CIRF(%d,%d,%d,0);CIRF(%d,%d,%d,%d);", ball_pos_x_alt, ball_pos_y_alt, BALL_GROESSE / 2, ball_pos_x, ball_pos_y, BALL_GROESSE / 2, BALL_FARBE);
-    mySerial.println(buffer); 
+    sprintf(buffer, "CIRF(%d,%d,%d,0);CIRF(%d,%d,%d,%d);", ball_pos_x_alt, ball_pos_y_alt, BALL_GROESSE / 2, ball_pos_x, ball_pos_y, BALL_RADIUS, BALL_FARBE);
+    serial.println(buffer); 
 }
 
 void berechneBallPosition() {
@@ -36,28 +37,29 @@ void berechneBallPosition() {
   // X-Richtung
   //
   if (ball_rx > 0) {
-     if (ball_pos_x + ball_rx < ANZEIGE_BREITE - (BALL_GROESSE / 2 + RAND_BREITE)) {
+     if (ball_pos_x + ball_rx < ANZEIGE_BREITE - (BALL_RADIUS + RAND_BREITE)) {
           ball_pos_x += ball_rx;
      } else {
           ball_rx = -ball_rx;
      }
   } else {
-     if (ball_pos_x + ball_rx > (BALL_GROESSE / 2 + RAND_BREITE)) {
+     if (ball_pos_x + ball_rx > (BALL_RADIUS + RAND_BREITE)) {
           ball_pos_x += ball_rx;
      } else {
           ball_rx = -ball_rx;
      }
   }
- // Y-Richtung
+  
+  // Y-Richtung
   //
   if (ball_ry > 0) {
-     if (ball_pos_y + ball_ry < ANZEIGE_HOEHE - (BALL_GROESSE / 2 + RAND_BREITE)) {
+     if (ball_pos_y + ball_ry < ANZEIGE_HOEHE - (BALL_RADIUS + RAND_BREITE)) {
           ball_pos_y += ball_ry;
      } else {
           ball_ry = -ball_ry;
      }
   } else {
-     if (ball_pos_y + ball_ry > (BALL_GROESSE / 2 + RAND_BREITE)) {
+     if (ball_pos_y + ball_ry > (BALL_RADIUS + RAND_BREITE)) {
           ball_pos_y += ball_ry;
      } else {
           ball_ry = -ball_ry;
@@ -72,7 +74,7 @@ void male_rechteck (int x, int y, int breite, int hoehe, int farbe) {
   char s[100];
   sprintf(s, "BOXF(%d,%d,%d,%d,%d);", x, y, x + breite, y + hoehe, farbe);
   
-  mySerial.println(s);  
+  serial.println(s);  
 
 }
 
@@ -90,11 +92,11 @@ void setup() {
   ball_rx = 4;
   ball_ry = 4;
   
-  mySerial.begin(9600);
-  mySerial.print("DR1;");    // the screen displays in upright way
-  mySerial.println("CLS(0);");
-  mySerial.println("");
-  mySerial.println("DS24(64,104,'Hallo!',5);"); 
+  serial.begin(9600);
+  serial.print("DR1;");    // the screen displays in upright way
+  serial.println("CLS(0);");
+  serial.println("");
+  serial.println("DS24(64,104,'Hallo!',5);"); 
   rand_malen();
 
 
@@ -104,7 +106,9 @@ void setup() {
 
 
 void loop() {
+  
   berechneBallPosition();
   maleBallNeu();
-  // delay(100);
+  
+  delay(50);
 }
