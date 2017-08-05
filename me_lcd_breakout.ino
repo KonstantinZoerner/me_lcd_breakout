@@ -24,7 +24,10 @@ void maleBallNeu() {
 
 
 void male_rechteck (int x, int y, int breite, int hoehe, int farbe) {
-      mySerial.println("BOXF(x,y,y + breite,y + hoehe, farbe);");  
+  char s[100];
+  sprintf(s, "BOXF(%d,%d,%d,%d,%d);", x, y, x + breite, y + breite, farbe);
+  
+  mySerial.println(s);  
 
 }
 
@@ -50,5 +53,9 @@ void setup() {
 
 void loop() {
   rand_malen();
+<<<<<<< Updated upstream
   maleBallNeu();
+=======
+  delay(100);
+>>>>>>> Stashed changes
 }
