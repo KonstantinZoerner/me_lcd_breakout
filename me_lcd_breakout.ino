@@ -5,7 +5,7 @@ MeSerial mySerial(PORT_5);
 
 #define ANZEIGE_BREITE 240
 #define ANZEIGE_HOEHE  320
-#define RAND_BREITE 3
+#define RAND_BREITE 2
 
 #define BALL_GROESSE 10
 #define BALL_FARBE   2
@@ -22,9 +22,7 @@ int ball_ry;
 char buffer[80];
 
 void maleBallNeu() {
-    sprintf(buffer, "CIRF(%d,%d,%d,0);", ball_pos_x_alt, ball_pos_y_alt, BALL_GROESSE / 2);
-    mySerial.println(buffer);
-    sprintf(buffer, "CIRF(%d,%d,%d,%d);", ball_pos_x, ball_pos_y, BALL_GROESSE / 2, BALL_FARBE);
+    sprintf(buffer, "CIRF(%d,%d,%d,0);CIRF(%d,%d,%d,%d);", ball_pos_x_alt, ball_pos_y_alt, BALL_GROESSE / 2, ball_pos_x, ball_pos_y, BALL_GROESSE / 2, BALL_FARBE);
     mySerial.println(buffer); 
 }
 
@@ -35,19 +33,34 @@ void berechneBallPosition() {
   ball_pos_x_alt = ball_pos_x;
   ball_pos_y_alt = ball_pos_y;
 
-  // X-Rechnung
+  // X-Richtung
   //
   if (ball_rx > 0) {
-     if (ball_pos_x + ball_rx < ANZEIGE_BREITE) {
-          ballball_pos_x += ball_rx;
+     if (ball_pos_x + ball_rx < ANZEIGE_BREITE - (BALL_GROESSE / 2 + RAND_BREITE)) {
+          ball_pos_x += ball_rx;
      } else {
           ball_rx = -ball_rx;
      }
   } else {
-     if (ball_pos_x + ball_rx > 0) {
-          ballball_pos_x += ball_rx;
+     if (ball_pos_x + ball_rx > (BALL_GROESSE / 2 + RAND_BREITE)) {
+          ball_pos_x += ball_rx;
      } else {
           ball_rx = -ball_rx;
+     }
+  }
+ // Y-Richtung
+  //
+  if (ball_ry > 0) {
+     if (ball_pos_y + ball_ry < ANZEIGE_HOEHE - (BALL_GROESSE / 2 + RAND_BREITE)) {
+          ball_pos_y += ball_ry;
+     } else {
+          ball_ry = -ball_ry;
+     }
+  } else {
+     if (ball_pos_y + ball_ry > (BALL_GROESSE / 2 + RAND_BREITE)) {
+          ball_pos_y += ball_ry;
+     } else {
+          ball_ry = -ball_ry;
      }
   }
 
@@ -64,9 +77,9 @@ void male_rechteck (int x, int y, int breite, int hoehe, int farbe) {
 }
 
 void rand_malen(){
-  male_rechteck(0, 0, RAND_BREITE, ANZEIGE_HOEHE, 7);
-  male_rechteck(0, 0, ANZEIGE_BREITE, RAND_BREITE, 2);
-  male_rechteck(ANZEIGE_BREITE - RAND_BREITE - 1, 0, RAND_BREITE, ANZEIGE_HOEHE, 4);
+  male_rechteck(0, 0, RAND_BREITE, ANZEIGE_HOEHE, 6);
+  male_rechteck(0, 0, ANZEIGE_BREITE, RAND_BREITE, 6);
+  male_rechteck(ANZEIGE_BREITE - RAND_BREITE - 1, 0, RAND_BREITE, ANZEIGE_HOEHE, 6);
   
 }
 
@@ -74,12 +87,16 @@ void setup() {
 
   ball_pos_x = 150;
   ball_pos_y = 150;
+  ball_rx = 4;
+  ball_ry = 4;
   
   mySerial.begin(9600);
   mySerial.print("DR1;");    // the screen displays in upright way
   mySerial.println("CLS(0);");
   mySerial.println("");
   mySerial.println("DS24(64,104,'Hallo!',5);"); 
+  rand_malen();
+
 
 
   delay(1000); 
@@ -87,7 +104,7 @@ void setup() {
 
 
 void loop() {
-  rand_malen();
+  berechneBallPosition();
   maleBallNeu();
-  delay(100);
+  // delay(100);
 }
