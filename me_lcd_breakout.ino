@@ -2,6 +2,7 @@
 #include <SoftwareSerial.h>
 
 MeSerial serial(PORT_5);
+MeJoystick joystick(6);
 
 #define ANZEIGE_BREITE 240
 #define ANZEIGE_HOEHE  320
@@ -25,9 +26,17 @@ int ball_pos_y_alt;
 int ball_rx;
 int ball_ry;
 
+<<<<<<< HEAD
 int schlaeger_x;
+=======
+double joy_x;
+>>>>>>> a64ef959d6a55518f34dd1e6b429a0fd938850ae
 
 char buffer[80];
+
+void leseJoystickAus() {
+	joy_x = joystick.read(1);
+}
 
 void maleBallNeu() {
     sprintf(buffer, "CIRF(%d,%d,%d,0);CIRF(%d,%d,%d,%d);", ball_pos_x_alt, ball_pos_y_alt, BALL_GROESSE / 2, ball_pos_x, ball_pos_y, BALL_RADIUS, BALL_FARBE);
