@@ -35,6 +35,11 @@ void leseJoystickAus() {
 	joy_x = joystick.read(1);
 }
 
+void maleJoystickPosition() {
+	sprintf(buffer, "DS24(64,104,'joy_x=%3.2f',5)", joy_x);
+	serial.println(buffer); 
+}
+
 void maleBallNeu() {
     sprintf(buffer, "CIRF(%d,%d,%d,0);CIRF(%d,%d,%d,%d);", ball_pos_x_alt, ball_pos_y_alt, BALL_GROESSE / 2, ball_pos_x, ball_pos_y, BALL_RADIUS, BALL_FARBE);
     serial.println(buffer); 
