@@ -1,6 +1,8 @@
 #include <MeAuriga.h>
 #include <SoftwareSerial.h>
 
+MeSerial mySerial(PORT_5);
+
 void setup() {
   // put your setup code here, to run once:
 
