@@ -12,9 +12,9 @@ MeJoystick joystick(6);
 #define BALL_RADIUS  5
 #define BALL_FARBE   2
 
-#define SCHLAEGER_HOEHE 10
+#define SCHLAEGER_HOEHE 7
 #define SCHLAEGER_BREITE 50
-#define SCHLAEGER_POS_Y 250
+#define SCHLAEGER_POS_Y 270
 #define SCHLAEGER_FARBE 4
 
 int ball_pos_x;
@@ -26,7 +26,8 @@ int ball_pos_y_alt;
 int ball_rx;
 int ball_ry;
 
-int schlaeger_x;
+int schlaeger_x = 100;
+int schlaeger_x_alt = 100;
 double joy_x;
 
 char buffer[80];
@@ -42,7 +43,7 @@ void maleBallNeu() {
 
 void maleSchlaegerNeu() {
     
-  sprintf(buffer, "BOXF(%d,%d,%d,%d,%d);", schlaeger_x, SCHLAEGER_POS_Y, schlaeger_x + SCHLAEGER_BREITE, SCHLAEGER_POS_Y + SCHLAEGER_HOEHE, SCHLAEGER_FARBE);
+  sprintf(buffer, "BOXF(%d,%d,%d,%d,%d);BOXF(%d,%d,%d,%d,%d);",schlaeger_x_alt, SCHLAEGER_POS_Y, schlaeger_x_alt + SCHLAEGER_BREITE, SCHLAEGER_POS_Y + SCHLAEGER_HOEHE, 0, schlaeger_x, SCHLAEGER_POS_Y, schlaeger_x + SCHLAEGER_BREITE, SCHLAEGER_POS_Y + SCHLAEGER_HOEHE, SCHLAEGER_FARBE);
   
   serial.println(buffer);  
 }
@@ -129,6 +130,7 @@ void loop() {
   
   berechneBallPosition();
   maleBallNeu();
+  maleSchlaegerNeu();
   
   delay(50);
 }
