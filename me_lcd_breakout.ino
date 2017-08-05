@@ -15,6 +15,9 @@ int ball_pos_y;
 int ball_pos_x_alt;
 int ball_pos_y_alt;
 
+int ball_rx;
+int ball_ry;
+
 char buffer[80];
 
 void maleBallNeu() {
@@ -31,6 +34,21 @@ void berechneBallPosition() {
   ball_pos_x_alt = ball_pos_x;
   ball_pos_y_alt = ball_pos_y;
 
+  // X-Rechnung
+  //
+  if (ball_rx > 0) {
+     if (ball_pos_x + ball_rx < ANZEIGE_BREITE) {
+          ballball_pos_x += ball_rx;
+     } else {
+          ball_rx = -ball_rx;
+     }
+  } else {
+     if (ball_pos_x + ball_rx > 0) {
+          ballball_pos_x += ball_rx;
+     } else {
+          ball_rx = -ball_rx;
+     }
+  }
 
   
 }
