@@ -28,7 +28,8 @@ int ball_ry;
 
 int schlaeger_x = 100;
 int schlaeger_x_alt = 100;
-double joy_x;
+
+int joy_x;
 
 char buffer[80];
 
@@ -37,7 +38,10 @@ void leseJoystickAus() {
 }
 
 void maleJoystickPosition() {
-	sprintf(buffer, "DS24(64,104,'joy_x=%3.2f',5)", joy_x);
+  sprintf(buffer, "DS24(64,104,'joy_x=        ',5)");
+  serial.println(buffer); 
+  
+	sprintf(buffer, "DS24(64,104,'joy_x=%d',5)", joy_x);
 	serial.println(buffer); 
 }
 
@@ -48,13 +52,13 @@ void maleBallNeu() {
 
 void maleSchlaegerNeu() {
     
-  sprintf(buffer, "BOXF(%d,%d,%d,%d,%d);BOXF(%d,%d,%d,%d,%d);",schlaeger_x_alt, SCHLAEGER_POS_Y, schlaeger_x_alt + SCHLAEGER_BREITE, SCHLAEGER_POS_Y + SCHLAEGER_HOEHE, 0, schlaeger_x, SCHLAEGER_POS_Y, schlaeger_x + SCHLAEGER_BREITE, SCHLAEGER_POS_Y + SCHLAEGER_HOEHE, SCHLAEGER_FARBE);
+  sprintf(buffer, "BOXF(%d,%d,%d,%d,%d);BOXF(%d,%d,%d,%d,%d);",schlaeger_x_alt - SCHLAEGER_BREITE/2, SCHLAEGER_POS_Y, schlaeger_x_alt - SCHLAEGER_BREITE/2 + SCHLAEGER_BREITE, SCHLAEGER_POS_Y + SCHLAEGER_HOEHE, 0, schlaeger_x - SCHLAEGER_BREITE/2, SCHLAEGER_POS_Y, schlaeger_x - SCHLAEGER_BREITE/2 + SCHLAEGER_BREITE, SCHLAEGER_POS_Y + SCHLAEGER_HOEHE, SCHLAEGER_FARBE);
   
   serial.println(buffer);  
 }
 
 void berechneBallPosition() {
-
+  
   // Alte Position merken
   //
   ball_pos_x_alt = ball_pos_x;
@@ -90,8 +94,20 @@ void berechneBallPosition() {
      } else {
           ball_ry = -ball_ry;
      }
-  }
+  }  
+}
 
+void berechneSchlaegerPosition() {
+  
+  // Alte Position merken
+  schlaeger_x_alt = schlaeger_x;
+  schlaeger_x = (joy_x + 500) / 4;
+
+  if (schlaeger_x - SCHLAEGER_BREITE/2 < RAND_BREITE + 1) {
+    schlaeger_x = RAND_BREITE + 1 + SCHLAEGER_BREITE/2;
+  } else if (schlaeger_x - SCHLAEGER_BREITE/2 > ANZEIGE_BREITE - RAND_BREITE - 2 - SCHLAEGER_BREITE) {
+    schlaeger_x = ANZEIGE_BREITE - RAND_BREITE - 2 - SCHLAEGER_BREITE + SCHLAEGER_BREITE/2;
+  }
   
 }
 
@@ -125,7 +141,7 @@ void setup() {
   serial.println("DS24(64,104,'Hallo!',5);"); 
   rand_malen();
 
-
+  maleSchlaegerNeu();
 
   delay(1000); 
 }
@@ -135,7 +151,12 @@ void loop() {
   
   berechneBallPosition();
   maleBallNeu();
-  maleSchlaegerNeu();
+
+  leseJoystickAus(); 
+  berechneSchlaegerPosition();
+  if (schlaeger_x_alt != schlaeger_x) {
+        maleSchlaegerNeu();    
+  }
   
   delay(50);
 }
