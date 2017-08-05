@@ -64,7 +64,19 @@ void berechneBallPosition() {
   ball_pos_x_alt = ball_pos_x;
   ball_pos_y_alt = ball_pos_y;
 
-  // X-Richtung
+  // Abprallen am Schlaeger
+  if (ball_ry > 0) {
+    if (ball_pos_x + BALL_RADIUS > schlaeger_x - SCHLAEGER_BREITE/2 // Ball rechts vom linken Rand des Schlaegers
+      && ball_pos_x - BALL_RADIUS < schlaeger_x + SCHLAEGER_BREITE/2 // Ball ist links vom rechten Rand
+        && ball_pos_y + BALL_RADIUS > SCHLAEGER_POS_Y - 1 // Ball ist unterhalb der oberen Schlaegergrenze
+          && ball_pos_y - BALL_RADIUS < SCHLAEGER_POS_Y - 1
+      ) {
+      ball_ry = -ball_ry;
+    }
+  }  
+
+
+  // Bewegung X-Richtung
   //
   if (ball_rx > 0) {
      if (ball_pos_x + ball_rx < ANZEIGE_BREITE - (BALL_RADIUS + RAND_BREITE)) {
@@ -80,21 +92,23 @@ void berechneBallPosition() {
      }
   }
   
-  // Y-Richtung
+  // Bewegung in Y-Richtung
   //
   if (ball_ry > 0) {
+     // Abprallen unten (TODO: verloren)
      if (ball_pos_y + ball_ry < ANZEIGE_HOEHE - (BALL_RADIUS + RAND_BREITE)) {
           ball_pos_y += ball_ry;
      } else {
           ball_ry = -ball_ry;
      }
   } else {
+     // Abprallen an der Decke (TODO: verloren)
      if (ball_pos_y + ball_ry > (BALL_RADIUS + RAND_BREITE)) {
           ball_pos_y += ball_ry;
      } else {
           ball_ry = -ball_ry;
      }
-  }  
+  }
 }
 
 void berechneSchlaegerPosition() {
@@ -138,9 +152,9 @@ void setup() {
   serial.print("DR1;");    // the screen displays in upright way
   serial.println("CLS(0);");
   serial.println("");
-  serial.println("DS24(64,104,'Hallo!',5);"); 
-  rand_malen();
+  serial.println("DS24(64,104,' ',5);"); 
 
+  rand_malen();
   maleSchlaegerNeu();
 
   delay(1000); 
