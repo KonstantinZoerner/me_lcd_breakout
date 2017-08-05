@@ -18,8 +18,21 @@ int ball_pos_y_alt;
 char buffer[80];
 
 void maleBallNeu() {
+    sprintf(buffer, "CIRF(%d,%d,%d,0);", ball_pos_x_alt, ball_pos_y_alt, BALL_GROESSE / 2);
+    mySerial.println(buffer);
     sprintf(buffer, "CIRF(%d,%d,%d,%d);", ball_pos_x, ball_pos_y, BALL_GROESSE / 2, BALL_FARBE);
     mySerial.println(buffer); 
+}
+
+void berechneBallPosition() {
+
+  // Alte Position merken
+  //
+  ball_pos_x_alt = ball_pos_x;
+  ball_pos_y_alt = ball_pos_y;
+
+
+  
 }
 
 
