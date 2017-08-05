@@ -5,6 +5,7 @@ MeSerial mySerial(PORT_5);
 
 #define ANZEIGE_BREITE 240
 #define ANZEIGE_HOEHE  320
+#define RAND_BREITE 3
 
 #define BALL_GROESSE 10
 #define BALL_FARBE   2
@@ -38,14 +39,17 @@ void berechneBallPosition() {
 
 void male_rechteck (int x, int y, int breite, int hoehe, int farbe) {
   char s[100];
-  sprintf(s, "BOXF(%d,%d,%d,%d,%d);", x, y, x + breite, y + breite, farbe);
+  sprintf(s, "BOXF(%d,%d,%d,%d,%d);", x, y, x + breite, y + hoehe, farbe);
   
   mySerial.println(s);  
 
 }
 
 void rand_malen(){
-  male_rechteck(10, 10, 20, 30, 2);
+  male_rechteck(0, 0, RAND_BREITE, ANZEIGE_HOEHE, 7);
+  male_rechteck(0, 0, ANZEIGE_BREITE, RAND_BREITE, 2);
+  male_rechteck(ANZEIGE_BREITE - RAND_BREITE - 1, 0, RAND_BREITE, ANZEIGE_HOEHE, 4);
+  
 }
 
 void setup() {
