@@ -26,11 +26,8 @@ int ball_pos_y_alt;
 int ball_rx;
 int ball_ry;
 
-<<<<<<< HEAD
 int schlaeger_x;
-=======
 double joy_x;
->>>>>>> a64ef959d6a55518f34dd1e6b429a0fd938850ae
 
 char buffer[80];
 
