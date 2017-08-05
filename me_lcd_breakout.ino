@@ -3,8 +3,25 @@
 
 MeSerial mySerial(PORT_5);
 
-#define ANZEIGE_BREITE = 240
-#define ANZEIGE_HOEHE  = 320
+#define ANZEIGE_BREITE 240
+#define ANZEIGE_HOEHE  320
+
+#define BALL_GROESSE 10
+#define BALL_FARBE   2
+
+int ball_pos_x;
+int ball_pos_y;
+
+int ball_pos_x_alt;
+int ball_pos_y_alt;
+
+char buffer[80];
+
+void maleBallNeu() {
+    sprintf(buffer, "CIRF(%d,%d,%d,%d);", ball_pos_x, ball_pos_y, BALL_GROESSE / 2, BALL_FARBE);
+    mySerial.println(buffer); 
+}
+
 
 void male_rechteck (int x, int y, int breite, int hoehe, int farbe) {
       mySerial.println("BOXF(x,y,y + breite,y + hoehe, farbe);");  
@@ -16,6 +33,10 @@ void rand_malen(){
 }
 
 void setup() {
+
+  ball_pos_x = 150;
+  ball_pos_y = 150;
+  
   mySerial.begin(9600);
   mySerial.print("DR1;");    // the screen displays in upright way
   mySerial.println("CLS(0);");
@@ -29,4 +50,5 @@ void setup() {
 
 void loop() {
   rand_malen();
+  maleBallNeu();
 }
