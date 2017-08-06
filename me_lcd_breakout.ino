@@ -187,7 +187,7 @@ void steinLoeschen(int x, int y) {
   if (stein_liste[y][x] != 0) {
       stein_liste[y][x] = 0;
       male_rechteck(STEINE_START_X + x * (STEIN_BREITE + STEIN_ABSTAND),  STEINE_START_Y + y * (STEIN_HOEHE + STEIN_ABSTAND), STEIN_BREITE, STEIN_HOEHE, 0);
-  }
+   }
 }
 
 int ermittelSteinFuerPixel (int x, int y) {
@@ -202,8 +202,87 @@ int ermittelSteinFuerPixel (int x, int y) {
   int spalte = (x - STEINE_START_X) / (STEIN_BREITE + STEIN_ABSTAND);
   int reihe = (y - STEINE_START_Y) / (STEIN_HOEHE + STEIN_ABSTAND);
 
-  return reihe * STEINE_PRO_REIHE + spalte;
+  if (stein_liste[reihe][spalte] != 0) {
+    return reihe * STEINE_PRO_REIHE + spalte;
+  } else {
+    return -1; // kein Stein an der der Stelle.
+  }
+
 }
+
+void pruefeBallGegenMauer() {
+
+  int getroffenerStein = -1;
+  int trefferMuster = 0;
+
+  // Teste links oben
+  int stein = ermittelSteinFuerPixel(ball_pos_x - BALL_RADIUS, ball_pos_y - BALL_RADIUS);
+  if (stein != -1) {
+    getroffenerStein = stein;
+    trefferMuster += 1;
+  }
+
+  // Teste rechts oben
+  stein = ermittelSteinFuerPixel(ball_pos_x + BALL_RADIUS, ball_pos_y - BALL_RADIUS);
+  if (stein != -1) {
+    if (getroffenerStein == -1) {
+      getroffenerStein = stein;
+      trefferMuster += 2;  
+    } else if (getroffenerStein == stein) {
+      trefferMuster += 2;  
+    }
+  }
+
+  // Teste links unten
+  stein = ermittelSteinFuerPixel(ball_pos_x - BALL_RADIUS, ball_pos_y + BALL_RADIUS);
+  if (stein != -1) {
+    if (getroffenerStein == -1) {
+      getroffenerStein = stein;
+      trefferMuster += 4;  
+    } else if (getroffenerStein == stein) {
+      trefferMuster += 4;  
+    }
+  }
+
+  // Teste rechts unten
+  stein = ermittelSteinFuerPixel(ball_pos_x + BALL_RADIUS, ball_pos_y + BALL_RADIUS);
+  if (stein != -1) {
+    if (getroffenerStein == -1) {
+      getroffenerStein = stein;
+      trefferMuster += 8;  
+    } else if (getroffenerStein == stein) {
+      trefferMuster += 8;  
+    }
+  }
+
+  if (getroffenerStein != -1) {
+    steinLoeschen(getroffenerStein % STEINE_PRO_REIHE, getroffenerStein / STEINE_PRO_REIHE);
+    switch(trefferMuster) {
+      case 1: // links oben
+      case 2: // rechts oben
+      case 4: // links unten
+      case 8: // rechts unten
+      case 7:
+      case 11:
+      case 13:
+      case 14:
+          ball_rx = -ball_rx;
+          ball_ry = -ball_ry;
+          break;
+      case 3:
+      case 12:
+          ball_ry = -ball_ry;
+          break;
+      case 5:
+      case 10:
+          ball_rx = -ball_rx;
+          break;
+      default:
+          ball_rx = -ball_rx;
+          ball_ry = -ball_ry;
+    }
+  }
+} 
 
 
 void setup() {
@@ -236,7 +315,8 @@ void setup() {
 void loop() {
   
   berechneBallPosition();
-  maleBallNeu();
+  pruefeBallGegenMauer();
+  maleBallNeu();  
 
   leseJoystickAus(); 
   berechneSchlaegerPosition();
@@ -244,22 +324,6 @@ void loop() {
         maleSchlaegerNeu();    
   }
 
-  int stein = ermittelSteinFuerPixel(ball_pos_x - BALL_RADIUS, ball_pos_y - BALL_RADIUS);
-  if (stein != -1) {
-    steinLoeschen(stein % STEINE_PRO_REIHE, stein / STEINE_PRO_REIHE);
-  }
-  stein = ermittelSteinFuerPixel(ball_pos_x + BALL_RADIUS, ball_pos_y - BALL_RADIUS);
-  if (stein != -1) {
-    steinLoeschen(stein % STEINE_PRO_REIHE, stein / STEINE_PRO_REIHE);
-  }
-  stein = ermittelSteinFuerPixel(ball_pos_x - BALL_RADIUS, ball_pos_y + BALL_RADIUS);
-  if (stein != -1) {
-    steinLoeschen(stein % STEINE_PRO_REIHE, stein / STEINE_PRO_REIHE);
-  }
-  stein = ermittelSteinFuerPixel(ball_pos_x + BALL_RADIUS, ball_pos_y + BALL_RADIUS);
-  if (stein != -1) {
-    steinLoeschen(stein % STEINE_PRO_REIHE, stein / STEINE_PRO_REIHE);
-  }
 
 
   
