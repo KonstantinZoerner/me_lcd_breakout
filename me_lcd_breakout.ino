@@ -24,6 +24,10 @@ MeJoystick joystick(6);
 
 #define STEINE_PRO_REIHE    8
 #define ANZAHL_STEIN_REIHEN 6
+
+// Postionen (Pixel), ab denen die Mauer gemalt wird
+//
+#define STEINE_START_X 9 
 #define STEINE_START_Y 40
 
 
@@ -169,7 +173,7 @@ void steineMalen() {
     for (int j=0; j<STEINE_PRO_REIHE; ++j) {
 
         if (stein_liste[i][j] == 1) {
-        male_rechteck(9 + j * (STEIN_BREITE + STEIN_ABSTAND), STEINE_START_Y + i * (STEIN_HOEHE + STEIN_ABSTAND), STEIN_BREITE, STEIN_HOEHE, 1);              
+        male_rechteck(STEINE_START_X + j * (STEIN_BREITE + STEIN_ABSTAND), STEINE_START_Y + i * (STEIN_HOEHE + STEIN_ABSTAND), STEIN_BREITE, STEIN_HOEHE, 1);              
         }
 
 
@@ -180,9 +184,9 @@ void steineMalen() {
 }
 
 void steinLoeschen(int x, int y) {
-  if (stein_liste[x][y] != 0) {
-      stein_liste[x][y] = 0;
-      male_rechteck(9 + x * (STEIN_BREITE + STEIN_ABSTAND),  STEINE_START_Y + y * (STEIN_HOEHE + STEIN_ABSTAND), STEIN_BREITE, STEIN_HOEHE, 0);
+  if (stein_liste[y][x] != 0) {
+      stein_liste[y][x] = 0;
+      male_rechteck(STEINE_START_X + x * (STEIN_BREITE + STEIN_ABSTAND),  STEINE_START_Y + y * (STEIN_HOEHE + STEIN_ABSTAND), STEIN_BREITE, STEIN_HOEHE, 0);
   }
 }
 
@@ -191,7 +195,11 @@ int ermittelSteinFuerPixel (int x, int y) {
     return -1;
   }
 
-  int spalte = x / (STEIN_BREITE + STEIN_ABSTAND);
+  if (x < STEINE_START_X || x > STEINE_START_X + (STEIN_BREITE + STEIN_ABSTAND) * STEINE_PRO_REIHE) {
+    return -1;
+  }
+
+  int spalte = (x - STEINE_START_X) / (STEIN_BREITE + STEIN_ABSTAND);
   int reihe = (y - STEINE_START_Y) / (STEIN_HOEHE + STEIN_ABSTAND);
 
   return reihe * STEINE_PRO_REIHE + spalte;
