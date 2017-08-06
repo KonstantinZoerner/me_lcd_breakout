@@ -17,6 +17,13 @@ MeJoystick joystick(6);
 #define SCHLAEGER_POS_Y 270
 #define SCHLAEGER_FARBE 4
 
+#define STEIN_BREITE 25
+#define STEIN_HOEHE 10
+#define STEIN_ABSTAND 3
+
+#define STEINE_PRO_REIHE    8
+#define ANZAHL_STEIN_REIHEN 6
+
 int ball_pos_x;
 int ball_pos_y;
 
@@ -32,6 +39,20 @@ int schlaeger_x_alt = 100;
 int joy_x;
 
 char buffer[80];
+
+byte stein_liste[ANZAHL_STEIN_REIHEN][STEINE_PRO_REIHE];
+
+void steineInitailisieren() {
+  for (int i=0; i<ANZAHL_STEIN_REIHEN; ++i) {
+    for (int j = 0; j < STEINE_PRO_REIHE; ++j) {
+      stein_liste[i][j] = 1;
+    }
+  }
+
+  stein_liste[2][3] = 0;
+}
+
+
 
 void leseJoystickAus() {
 	joy_x = joystick.read(1);
@@ -141,6 +162,22 @@ void rand_malen(){
   
 }
 
+void steineMalen() {
+
+  for (int i=0; i<ANZAHL_STEIN_REIHEN; ++i) {
+    for (int j=0; j<STEINE_PRO_REIHE; ++j) {
+
+        if (stein_liste[i][j] == 1) {
+        male_rechteck(9 + j * (STEIN_BREITE + STEIN_ABSTAND), 40 + i * (STEIN_HOEHE + STEIN_ABSTAND), STEIN_BREITE, STEIN_HOEHE, 1);              
+        }
+
+
+    }      
+  }
+
+
+}
+
 void setup() {
 
   ball_pos_x = 150;
@@ -154,10 +191,15 @@ void setup() {
   serial.println("");
   serial.println("DS24(64,104,' ',5);"); 
 
+  steineInitailisieren();
+
   rand_malen();
   maleSchlaegerNeu();
+  steineMalen();
+
 
   delay(1000); 
+
 }
 
 
