@@ -30,6 +30,10 @@ MeJoystick joystick(6);
 #define STEINE_START_X 9 
 #define STEINE_START_Y 40
 
+// Postionen (Pixel), fuer die Anzeige
+#define ANZEIGE_START_X 9 
+#define ANZEIGE_START_Y 290
+
 
 int ball_pos_x;
 int ball_pos_y;
@@ -49,6 +53,13 @@ int abgeprallt = 0;
 char buffer[80];
 
 byte stein_liste[ANZAHL_STEIN_REIHEN][STEINE_PRO_REIHE];
+
+
+// Zustand des Spieles 
+int anzahl_punkte = 1000;
+int anzahl_baelle = 3;
+int aktueller_level = 3;
+
 
 void steineInitailisieren() {
   for (int i=0; i<ANZAHL_STEIN_REIHEN; ++i) {
@@ -82,6 +93,17 @@ void maleSchlaegerNeu() {
   sprintf(buffer, "BOXF(%d,%d,%d,%d,%d);BOXF(%d,%d,%d,%d,%d);",schlaeger_x_alt - SCHLAEGER_BREITE/2, SCHLAEGER_POS_Y, schlaeger_x_alt - SCHLAEGER_BREITE/2 + SCHLAEGER_BREITE, SCHLAEGER_POS_Y + SCHLAEGER_HOEHE, 0, schlaeger_x - SCHLAEGER_BREITE/2, SCHLAEGER_POS_Y, schlaeger_x - SCHLAEGER_BREITE/2 + SCHLAEGER_BREITE, SCHLAEGER_POS_Y + SCHLAEGER_HOEHE, SCHLAEGER_FARBE);
   
   serial.println(buffer);  
+}
+
+void maleAnzeige() {
+
+	// Anzahl Punkte und Level
+	sprintf(buffer, "DS24(%d,%d,'Pts: %5d' Lvl: %2d Bls: ,5);", ANZEIGE_START_X, ANZEIGE_START_Y, anzahl_punkte, aktueller_level);
+	serial.println(buffer); 
+
+	// Anzahl Baelle
+
+
 }
 
 void berechneBallPosition() {
