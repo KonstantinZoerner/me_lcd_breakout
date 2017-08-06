@@ -21,8 +21,11 @@ MeJoystick joystick(6);
 #define STEIN_HOEHE 10
 #define STEIN_ABSTAND 3
 
+
 #define STEINE_PRO_REIHE    8
 #define ANZAHL_STEIN_REIHEN 6
+#define STEINE_START_Y 40
+
 
 int ball_pos_x;
 int ball_pos_y;
@@ -48,8 +51,6 @@ void steineInitailisieren() {
       stein_liste[i][j] = 1;
     }
   }
-
-  stein_liste[2][3] = 0;
 }
 
 
@@ -168,7 +169,7 @@ void steineMalen() {
     for (int j=0; j<STEINE_PRO_REIHE; ++j) {
 
         if (stein_liste[i][j] == 1) {
-        male_rechteck(9 + j * (STEIN_BREITE + STEIN_ABSTAND), 40 + i * (STEIN_HOEHE + STEIN_ABSTAND), STEIN_BREITE, STEIN_HOEHE, 1);              
+        male_rechteck(9 + j * (STEIN_BREITE + STEIN_ABSTAND), STEINE_START_Y + i * (STEIN_HOEHE + STEIN_ABSTAND), STEIN_BREITE, STEIN_HOEHE, 1);              
         }
 
 
@@ -177,6 +178,25 @@ void steineMalen() {
 
 
 }
+
+void steinLoeschen(int x, int y) {
+  if (stein_liste[x][y] != 0) {
+      stein_liste[x][y] = 0;
+      male_rechteck(9 + x * (STEIN_BREITE + STEIN_ABSTAND),  STEINE_START_Y + y * (STEIN_HOEHE + STEIN_ABSTAND), STEIN_BREITE, STEIN_HOEHE, 0);
+  }
+}
+
+int ermittelSteinFuerPixel (int x, int y) {
+  if (y < STEINE_START_Y || y > STEINE_START_Y + (STEIN_HOEHE + STEIN_ABSTAND) * ANZAHL_STEIN_REIHEN) {
+    return -1;
+  }
+
+  int spalte = x / (STEIN_BREITE + STEIN_ABSTAND);
+  int reihe = (y - STEINE_START_Y) / (STEIN_HOEHE + STEIN_ABSTAND);
+
+  return reihe * STEINE_PRO_REIHE + spalte;
+}
+
 
 void setup() {
 
@@ -200,6 +220,8 @@ void setup() {
 
   delay(1000); 
 
+
+
 }
 
 
@@ -213,6 +235,25 @@ void loop() {
   if (schlaeger_x_alt != schlaeger_x) {
         maleSchlaegerNeu();    
   }
+
+  int stein = ermittelSteinFuerPixel(ball_pos_x - BALL_RADIUS, ball_pos_y - BALL_RADIUS);
+  if (stein != -1) {
+    steinLoeschen(stein % STEINE_PRO_REIHE, stein / STEINE_PRO_REIHE);
+  }
+  stein = ermittelSteinFuerPixel(ball_pos_x + BALL_RADIUS, ball_pos_y - BALL_RADIUS);
+  if (stein != -1) {
+    steinLoeschen(stein % STEINE_PRO_REIHE, stein / STEINE_PRO_REIHE);
+  }
+  stein = ermittelSteinFuerPixel(ball_pos_x - BALL_RADIUS, ball_pos_y + BALL_RADIUS);
+  if (stein != -1) {
+    steinLoeschen(stein % STEINE_PRO_REIHE, stein / STEINE_PRO_REIHE);
+  }
+  stein = ermittelSteinFuerPixel(ball_pos_x + BALL_RADIUS, ball_pos_y + BALL_RADIUS);
+  if (stein != -1) {
+    steinLoeschen(stein % STEINE_PRO_REIHE, stein / STEINE_PRO_REIHE);
+  }
+
+
   
   delay(50);
 }
