@@ -50,6 +50,7 @@ int schlaeger_x = 100;
 int schlaeger_x_alt = 100;
 
 int joy_x;
+int abgeprallt = 0;
 
 char buffer[80];
 
@@ -126,16 +127,24 @@ void berechneBallPosition() {
   ball_pos_x_alt = ball_pos_x;
   ball_pos_y_alt = ball_pos_y;
 
+  if (abgeprallt == 1 && ball_ry < 0){
+    abgeprallt = 0;
+  }
+
   // Abprallen am Schlaeger
   if (ball_ry > 0) {
-    if (ball_pos_x + BALL_RADIUS > schlaeger_x - SCHLAEGER_BREITE/2 // Ball rechts vom linken Rand des Schlaegers
-      && ball_pos_x - BALL_RADIUS < schlaeger_x + SCHLAEGER_BREITE/2 // Ball ist links vom rechten Rand
-        && ball_pos_y + BALL_RADIUS > SCHLAEGER_POS_Y - 1 // Ball ist unterhalb der oberen Schlaegergrenze
-          && ball_pos_y - BALL_RADIUS < SCHLAEGER_POS_Y - 1
+    if (ball_pos_x + ball_rx + BALL_RADIUS > schlaeger_x - SCHLAEGER_BREITE/2 // Ball rechts vom linken Rand des Schlaegers
+      && ball_pos_x + ball_rx - BALL_RADIUS < schlaeger_x + SCHLAEGER_BREITE/2 // Ball ist links vom rechten Rand
+        && ball_pos_y + ball_ry + BALL_RADIUS > SCHLAEGER_POS_Y - 1 // Ball ist unterhalb der oberen Schlaegergrenze
+          && ball_pos_y + ball_ry - BALL_RADIUS < SCHLAEGER_POS_Y - 1
       ) {
       ball_ry = -ball_ry;
+      abgeprallt = 1;
+     
     }
-  }  
+    
+  } 
+  
 
 
   // Bewegung X-Richtung
@@ -356,6 +365,11 @@ void loop() {
   berechneBallPosition();
   pruefeBallGegenMauer();
   maleBallNeu();  
+  if (abgeprallt == 1){
+      male_rechteck(0,0,10,10,4);
+  }else{
+      male_rechteck(0,0,10,10,0);
+  }
 
   leseJoystickAus(); 
   berechneSchlaegerPosition();
