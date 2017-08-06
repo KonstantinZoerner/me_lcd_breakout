@@ -32,7 +32,7 @@ MeJoystick joystick(6);
 
 // Postionen (Pixel), fuer die Anzeige
 #define ANZEIGE_START_X 7 
-#define ANZEIGE_START_Y 300
+#define ANZEIGE_START_Y 307
 
 #define MAX_BAELLE 3
 
