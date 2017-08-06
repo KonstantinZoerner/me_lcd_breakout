@@ -31,8 +31,10 @@ MeJoystick joystick(6);
 #define STEINE_START_Y 40
 
 // Postionen (Pixel), fuer die Anzeige
-#define ANZEIGE_START_X 9 
-#define ANZEIGE_START_Y 290
+#define ANZEIGE_START_X 7 
+#define ANZEIGE_START_Y 300
+
+#define MAX_BAELLE 3
 
 
 int ball_pos_x;
@@ -97,8 +99,20 @@ void maleSchlaegerNeu() {
 void maleAnzeige() {
 
 	// Anzahl Punkte und Level
-	sprintf(buffer, "DS24(%d,%d,'Pts: %5d' Lvl: %2d Bls: ,5);", ANZEIGE_START_X, ANZEIGE_START_Y, anzahl_punkte, aktueller_level);
+	sprintf(buffer, "DS16(%d,%d,'Pts:%5d  Lvl:%2d  Bls: ',%d);", ANZEIGE_START_X, ANZEIGE_START_Y, anzahl_punkte, aktueller_level, SCHLAEGER_FARBE);
 	serial.println(buffer); 
+
+    // Baelle
+    for (int i = 0; i < MAX_BAELLE; ++i)
+    {
+    	int ball_c = 0;
+    	if (anzahl_baelle > i) {
+            ball_c = SCHLAEGER_FARBE;
+    	}
+    	sprintf(buffer, "CIRF(%d,%d,%d,%d);", ANZEIGE_START_X + 190 + i * (BALL_GROESSE+3), ANZEIGE_START_Y + BALL_RADIUS + 2, BALL_RADIUS, SCHLAEGER_FARBE);
+    	serial.println(buffer); 
+    }
+
 
 	// Anzahl Baelle
 
@@ -322,6 +336,8 @@ void setup() {
 
   steineInitailisieren();
 
+  maleAnzeige();
+
   rand_malen();
   maleSchlaegerNeu();
   steineMalen();
@@ -335,6 +351,7 @@ void setup() {
 
 
 void loop() {
+
   
   berechneBallPosition();
   pruefeBallGegenMauer();
