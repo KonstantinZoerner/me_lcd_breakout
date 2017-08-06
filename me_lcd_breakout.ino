@@ -348,11 +348,13 @@ void loop() {
   berechneBallPosition();
   pruefeBallGegenMauer();
   maleBallNeu();  
+  /*
   if (abgeprallt == 1){
       male_rechteck(0,0,10,10,4);
   }else{
       male_rechteck(0,0,10,10,0);
   }
+  */
 
   leseJoystickAus(); 
   berechneSchlaegerPosition();
