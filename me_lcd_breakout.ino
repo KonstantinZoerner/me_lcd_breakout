@@ -150,7 +150,7 @@ void berechneBallPosition() {
   // Bewegung X-Richtung
   //
   if (ball_rx > 0) {
-     if (ball_pos_x + ball_rx < ANZEIGE_BREITE - (BALL_RADIUS + RAND_BREITE)) {
+     if (ball_pos_x + ball_rx < ANZEIGE_BREITE - (BALL_RADIUS + RAND_BREITE +1)) {
           ball_pos_x += ball_rx;
      } else {
           ball_rx = -ball_rx;
@@ -261,52 +261,104 @@ void pruefeBallGegenMauer() {
   int trefferMuster = 0;
 
   // Teste links oben
-  int stein = ermittelSteinFuerPixel(ball_pos_x - BALL_RADIUS, ball_pos_y - BALL_RADIUS);
+  int stein = ermittelSteinFuerPixel(ball_pos_x + ball_rx - BALL_RADIUS, ball_pos_y + ball_ry - BALL_RADIUS);
   if (stein != -1) {
     getroffenerStein = stein;
     trefferMuster += 1;
   }
 
   // Teste rechts oben
-  stein = ermittelSteinFuerPixel(ball_pos_x + BALL_RADIUS, ball_pos_y - BALL_RADIUS);
+  stein = ermittelSteinFuerPixel(ball_pos_x + ball_rx + BALL_RADIUS, ball_pos_y + ball_ry - BALL_RADIUS);
   if (stein != -1) {
     if (getroffenerStein == -1) {
       getroffenerStein = stein;
       trefferMuster += 2;  
-    } else if (getroffenerStein == stein) {
+    } else {
       trefferMuster += 2;  
     }
   }
 
   // Teste links unten
-  stein = ermittelSteinFuerPixel(ball_pos_x - BALL_RADIUS, ball_pos_y + BALL_RADIUS);
+  stein = ermittelSteinFuerPixel(ball_pos_x + ball_rx - BALL_RADIUS, ball_pos_y + ball_ry + BALL_RADIUS);
   if (stein != -1) {
     if (getroffenerStein == -1) {
       getroffenerStein = stein;
       trefferMuster += 4;  
-    } else if (getroffenerStein == stein) {
+    } else{
       trefferMuster += 4;  
     }
   }
 
   // Teste rechts unten
-  stein = ermittelSteinFuerPixel(ball_pos_x + BALL_RADIUS, ball_pos_y + BALL_RADIUS);
+  stein = ermittelSteinFuerPixel(ball_pos_x + ball_rx + BALL_RADIUS, ball_pos_y + ball_ry + BALL_RADIUS);
   if (stein != -1) {
     if (getroffenerStein == -1) {
       getroffenerStein = stein;
       trefferMuster += 8;  
-    } else if (getroffenerStein == stein) {
+    } else {
       trefferMuster += 8;  
     }
   }
 
   if (getroffenerStein != -1) {
     steinLoeschen(getroffenerStein % STEINE_PRO_REIHE, getroffenerStein / STEINE_PRO_REIHE);
+    
+
     switch(trefferMuster) {
       case 1: // links oben
-      case 2: // rechts oben
-      case 4: // links unten
-      case 8: // rechts unten
+        if(ball_ry < 0){
+          if(ball_rx < 0){
+            ball_rx = -ball_rx;
+            ball_ry = -ball_ry;
+          }else{
+            ball_ry = -ball_ry;
+
+          }
+        } else {
+          ball_rx = -ball_rx;
+
+        }
+        break;
+      case 2: // rechts oben      
+        if(ball_ry < 0){
+          if(ball_rx < 0){
+            ball_ry = -ball_ry;
+          }else{
+            ball_ry = -ball_ry;
+            ball_rx = -ball_rx;
+          }
+        } else {
+          ball_rx = -ball_rx;
+        }
+        break;
+      case 8: // links unten
+        if(ball_ry > 0){
+            if(ball_rx < 0){
+              ball_ry = -ball_ry;
+            }else{
+              ball_ry = -ball_ry;
+              ball_rx = -ball_rx;
+            }
+          } else {
+            ball_rx = -ball_rx;
+
+          }
+          break;
+
+      case 4: // rechts unten
+        if(ball_ry > 0){
+          if(ball_rx < 0){
+            ball_rx = -ball_rx;
+            ball_ry = -ball_ry;
+          }else{
+            ball_ry = -ball_ry;
+
+          }
+        } else {
+          ball_rx = -ball_rx;
+
+        }
+        break;
       case 7:
       case 11:
       case 13:
@@ -325,6 +377,7 @@ void pruefeBallGegenMauer() {
       default:
           ball_rx = -ball_rx;
           ball_ry = -ball_ry;
+          break;
     }
   }
 } 
@@ -332,8 +385,8 @@ void pruefeBallGegenMauer() {
 
 void setup() {
 
-  ball_pos_x = 150;
-  ball_pos_y = 150;
+  ball_pos_x = 20;
+  ball_pos_y = 170;
   ball_rx = 4;
   ball_ry = 4;
   
