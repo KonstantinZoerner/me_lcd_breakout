@@ -222,12 +222,8 @@ void steineMalen() {
         if (stein_liste[i][j] == 1) {
         male_rechteck(STEINE_START_X + j * (STEIN_BREITE + STEIN_ABSTAND), STEINE_START_Y + i * (STEIN_HOEHE + STEIN_ABSTAND), STEIN_BREITE, STEIN_HOEHE, 1);
         }
-
-
     }
   }
-
-
 }
 
 void steinLoeschen(int x, int y) {
