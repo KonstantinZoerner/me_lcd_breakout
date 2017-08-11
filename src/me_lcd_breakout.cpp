@@ -49,23 +49,13 @@ void leseJoystickAus() {
 	joy_x = joystick.read(1);
 }
 
-void maleJoystickPosition() {
-  sprintf(buffer, "DS24(64,104,'joy_x=        ',5)");
-  serial.println(buffer);
-
-	sprintf(buffer, "DS24(64,104,'joy_x=%d',5)", joy_x);
-	serial.println(buffer);
-}
-
 void maleBallNeu() {
     sprintf(buffer, "CIRF(%d,%d,%d,0);CIRF(%d,%d,%d,%d);", ball_pos_x_alt, ball_pos_y_alt, BALL_RADIUS, ball_pos_x, ball_pos_y, BALL_RADIUS, BALL_FARBE);
     serial.println(buffer);
 }
 
 void maleSchlaegerNeu() {
-
   sprintf(buffer, "BOXF(%d,%d,%d,%d,%d);BOXF(%d,%d,%d,%d,%d);",schlaeger_x_alt - SCHLAEGER_BREITE/2, SCHLAEGER_POS_Y, schlaeger_x_alt - SCHLAEGER_BREITE/2 + SCHLAEGER_BREITE, SCHLAEGER_POS_Y + SCHLAEGER_HOEHE, 0, schlaeger_x - SCHLAEGER_BREITE/2, SCHLAEGER_POS_Y, schlaeger_x - SCHLAEGER_BREITE/2 + SCHLAEGER_BREITE, SCHLAEGER_POS_Y + SCHLAEGER_HOEHE, SCHLAEGER_FARBE);
-
   serial.println(buffer);
 }
 
@@ -78,18 +68,9 @@ void maleAnzeige() {
     // Baelle
     for (int i = 0; i < MAX_BAELLE; ++i)
     {
-    	int ball_c = 0;
-    	if (anzahl_baelle > i) {
-            ball_c = SCHLAEGER_FARBE;
-    	}
     	sprintf(buffer, "CIRF(%d,%d,%d,%d);", ANZEIGE_START_X + 190 + i * (BALL_GROESSE+3), ANZEIGE_START_Y + BALL_RADIUS + 2, BALL_RADIUS, SCHLAEGER_FARBE);
     	serial.println(buffer);
     }
-
-
-	// Anzahl Baelle
-
-
 }
 
 void berechneBallPosition() {
