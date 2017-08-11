@@ -1,3 +1,5 @@
+#include <Arduino.h>
+
 #include <MeAuriga.h>
 #include <SoftwareSerial.h>
 
@@ -10,7 +12,7 @@ MeJoystick joystick(6);
 
 #define BALL_GROESSE 10
 #define BALL_RADIUS  5
-#define BALL_FARBE   2
+#define BALL_FARBE   15
 
 #define SCHLAEGER_HOEHE 7
 #define SCHLAEGER_BREITE 50
@@ -27,11 +29,11 @@ MeJoystick joystick(6);
 
 // Postionen (Pixel), ab denen die Mauer gemalt wird
 //
-#define STEINE_START_X 9 
+#define STEINE_START_X 9
 #define STEINE_START_Y 40
 
 // Postionen (Pixel), fuer die Anzeige
-#define ANZEIGE_START_X 7 
+#define ANZEIGE_START_X 7
 #define ANZEIGE_START_Y 307
 
 #define MAX_BAELLE 3
@@ -57,7 +59,7 @@ char buffer[80];
 byte stein_liste[ANZAHL_STEIN_REIHEN][STEINE_PRO_REIHE];
 
 
-// Zustand des Spieles 
+// Zustand des Spieles
 int anzahl_punkte = 1000;
 int anzahl_baelle = 3;
 int aktueller_level = 3;
@@ -79,29 +81,29 @@ void leseJoystickAus() {
 
 void maleJoystickPosition() {
   sprintf(buffer, "DS24(64,104,'joy_x=        ',5)");
-  serial.println(buffer); 
-  
+  serial.println(buffer);
+
 	sprintf(buffer, "DS24(64,104,'joy_x=%d',5)", joy_x);
-	serial.println(buffer); 
+	serial.println(buffer);
 }
 
 void maleBallNeu() {
     sprintf(buffer, "CIRF(%d,%d,%d,0);CIRF(%d,%d,%d,%d);", ball_pos_x_alt, ball_pos_y_alt, BALL_RADIUS, ball_pos_x, ball_pos_y, BALL_RADIUS, BALL_FARBE);
-    serial.println(buffer); 
+    serial.println(buffer);
 }
 
 void maleSchlaegerNeu() {
-    
+
   sprintf(buffer, "BOXF(%d,%d,%d,%d,%d);BOXF(%d,%d,%d,%d,%d);",schlaeger_x_alt - SCHLAEGER_BREITE/2, SCHLAEGER_POS_Y, schlaeger_x_alt - SCHLAEGER_BREITE/2 + SCHLAEGER_BREITE, SCHLAEGER_POS_Y + SCHLAEGER_HOEHE, 0, schlaeger_x - SCHLAEGER_BREITE/2, SCHLAEGER_POS_Y, schlaeger_x - SCHLAEGER_BREITE/2 + SCHLAEGER_BREITE, SCHLAEGER_POS_Y + SCHLAEGER_HOEHE, SCHLAEGER_FARBE);
-  
-  serial.println(buffer);  
+
+  serial.println(buffer);
 }
 
 void maleAnzeige() {
 
 	// Anzahl Punkte und Level
 	sprintf(buffer, "DS16(%d,%d,'Pts:%5d  Lvl:%2d  Bls: ',%d);", ANZEIGE_START_X, ANZEIGE_START_Y, anzahl_punkte, aktueller_level, SCHLAEGER_FARBE);
-	serial.println(buffer); 
+	serial.println(buffer);
 
     // Baelle
     for (int i = 0; i < MAX_BAELLE; ++i)
@@ -111,7 +113,7 @@ void maleAnzeige() {
             ball_c = SCHLAEGER_FARBE;
     	}
     	sprintf(buffer, "CIRF(%d,%d,%d,%d);", ANZEIGE_START_X + 190 + i * (BALL_GROESSE+3), ANZEIGE_START_Y + BALL_RADIUS + 2, BALL_RADIUS, SCHLAEGER_FARBE);
-    	serial.println(buffer); 
+    	serial.println(buffer);
     }
 
 
@@ -121,7 +123,7 @@ void maleAnzeige() {
 }
 
 void berechneBallPosition() {
-  
+
   // Alte Position merken
   //
   ball_pos_x_alt = ball_pos_x;
@@ -140,11 +142,11 @@ void berechneBallPosition() {
       ) {
       ball_ry = -ball_ry;
       abgeprallt = 1;
-     
+
     }
-    
-  } 
-  
+
+  }
+
 
 
   // Bewegung X-Richtung
@@ -162,7 +164,7 @@ void berechneBallPosition() {
           ball_rx = -ball_rx;
      }
   }
-  
+
   // Bewegung in Y-Richtung
   //
   if (ball_ry > 0) {
@@ -183,7 +185,7 @@ void berechneBallPosition() {
 }
 
 void berechneSchlaegerPosition() {
-  
+
   // Alte Position merken
   schlaeger_x_alt = schlaeger_x;
   schlaeger_x = (joy_x + 500) / 4;
@@ -193,15 +195,15 @@ void berechneSchlaegerPosition() {
   } else if (schlaeger_x - SCHLAEGER_BREITE/2 > ANZEIGE_BREITE - RAND_BREITE - 2 - SCHLAEGER_BREITE) {
     schlaeger_x = ANZEIGE_BREITE - RAND_BREITE - 2 - SCHLAEGER_BREITE + SCHLAEGER_BREITE/2;
   }
-  
+
 }
 
 
 void male_rechteck (int x, int y, int breite, int hoehe, int farbe) {
   char s[100];
   sprintf(s, "BOXF(%d,%d,%d,%d,%d);", x, y, x + breite, y + hoehe, farbe);
-  
-  serial.println(s);  
+
+  serial.println(s);
 
 }
 
@@ -209,7 +211,7 @@ void rand_malen(){
   male_rechteck(0, 0, RAND_BREITE, ANZEIGE_HOEHE, 6);
   male_rechteck(0, 0, ANZEIGE_BREITE, RAND_BREITE, 6);
   male_rechteck(ANZEIGE_BREITE - RAND_BREITE - 1, 0, RAND_BREITE, ANZEIGE_HOEHE, 6);
-  
+
 }
 
 void steineMalen() {
@@ -218,11 +220,11 @@ void steineMalen() {
     for (int j=0; j<STEINE_PRO_REIHE; ++j) {
 
         if (stein_liste[i][j] == 1) {
-        male_rechteck(STEINE_START_X + j * (STEIN_BREITE + STEIN_ABSTAND), STEINE_START_Y + i * (STEIN_HOEHE + STEIN_ABSTAND), STEIN_BREITE, STEIN_HOEHE, 1);              
+        male_rechteck(STEINE_START_X + j * (STEIN_BREITE + STEIN_ABSTAND), STEINE_START_Y + i * (STEIN_HOEHE + STEIN_ABSTAND), STEIN_BREITE, STEIN_HOEHE, 1);
         }
 
 
-    }      
+    }
   }
 
 
@@ -272,9 +274,9 @@ void pruefeBallGegenMauer() {
   if (stein != -1) {
     if (getroffenerStein == -1) {
       getroffenerStein = stein;
-      trefferMuster += 2;  
+      trefferMuster += 2;
     } else {
-      trefferMuster += 2;  
+      trefferMuster += 2;
     }
   }
 
@@ -283,9 +285,9 @@ void pruefeBallGegenMauer() {
   if (stein != -1) {
     if (getroffenerStein == -1) {
       getroffenerStein = stein;
-      trefferMuster += 4;  
+      trefferMuster += 4;
     } else{
-      trefferMuster += 4;  
+      trefferMuster += 4;
     }
   }
 
@@ -294,15 +296,15 @@ void pruefeBallGegenMauer() {
   if (stein != -1) {
     if (getroffenerStein == -1) {
       getroffenerStein = stein;
-      trefferMuster += 8;  
+      trefferMuster += 8;
     } else {
-      trefferMuster += 8;  
+      trefferMuster += 8;
     }
   }
 
   if (getroffenerStein != -1) {
     steinLoeschen(getroffenerStein % STEINE_PRO_REIHE, getroffenerStein / STEINE_PRO_REIHE);
-    
+
 
     switch(trefferMuster) {
       case 1: // links oben
@@ -319,7 +321,7 @@ void pruefeBallGegenMauer() {
 
         }
         break;
-      case 2: // rechts oben      
+      case 2: // rechts oben
         if(ball_ry < 0){
           if(ball_rx < 0){
             ball_ry = -ball_ry;
@@ -380,7 +382,7 @@ void pruefeBallGegenMauer() {
           break;
     }
   }
-} 
+}
 
 
 void setup() {
@@ -389,12 +391,12 @@ void setup() {
   ball_pos_y = 170;
   ball_rx = 4;
   ball_ry = 4;
-  
+
   serial.begin(9600);
   serial.print("DR1;");    // the screen displays in upright way
   serial.println("CLS(0);");
   serial.println("");
-  serial.println("DS24(64,104,' ',5);"); 
+  serial.println("DS24(64,104,' ',5);");
 
   steineInitailisieren();
 
@@ -405,7 +407,7 @@ void setup() {
   steineMalen();
 
 
-  delay(1000); 
+  delay(1000);
 
 
 
@@ -414,10 +416,10 @@ void setup() {
 
 void loop() {
 
-  
+
   berechneBallPosition();
   pruefeBallGegenMauer();
-  maleBallNeu();  
+  maleBallNeu();
   /*
   if (abgeprallt == 1){
       male_rechteck(0,0,10,10,4);
@@ -426,14 +428,14 @@ void loop() {
   }
   */
 
-  leseJoystickAus(); 
+  leseJoystickAus();
   berechneSchlaegerPosition();
   if (schlaeger_x_alt != schlaeger_x) {
-        maleSchlaegerNeu();    
+        maleSchlaegerNeu();
   }
 
 
 
-  
+
   delay(50);
 }
