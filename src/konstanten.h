@@ -4,7 +4,7 @@
 
 #define BALL_GROESSE 10
 #define BALL_RADIUS  5
-#define BALL_FARBE   15
+#define BALL_FARBE   2
 
 #define SCHLAEGER_HOEHE 7
 #define SCHLAEGER_BREITE 50
