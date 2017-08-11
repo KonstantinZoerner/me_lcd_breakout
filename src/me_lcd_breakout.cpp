@@ -1,13 +1,11 @@
 #include <Arduino.h>
 
-#include <MeAuriga.h>
 #include <SoftwareSerial.h>
+#include <MeSerial.h>
+
 #include "konstanten.h"
 
 MeSerial serial(PORT_5);
-MeJoystick joystick(6);
-
-
 
 int ball_pos_x;
 int ball_pos_y;
@@ -18,10 +16,12 @@ int ball_pos_y_alt;
 int ball_rx;
 int ball_ry;
 
-int schlaeger_x = 100;
-int schlaeger_x_alt = 100;
+// Sachen aus schlaeger.c
+//
+extern int schlaeger_x;
+extern int schlaeger_x_alt;
+extern bool berechneSchlaegerPosition();
 
-int joy_x;
 int abgeprallt = 0;
 
 char buffer[80];
@@ -41,12 +41,6 @@ void steineInitailisieren() {
       stein_liste[i][j] = 1;
     }
   }
-}
-
-
-
-void leseJoystickAus() {
-	joy_x = joystick.read(1);
 }
 
 void maleBallNeu() {
@@ -134,21 +128,6 @@ void berechneBallPosition() {
      }
   }
 }
-
-void berechneSchlaegerPosition() {
-
-  // Alte Position merken
-  schlaeger_x_alt = schlaeger_x;
-  schlaeger_x = (joy_x + 500) / 4;
-
-  if (schlaeger_x - SCHLAEGER_BREITE/2 < RAND_BREITE + 1) {
-    schlaeger_x = RAND_BREITE + 1 + SCHLAEGER_BREITE/2;
-  } else if (schlaeger_x - SCHLAEGER_BREITE/2 > ANZEIGE_BREITE - RAND_BREITE - 2 - SCHLAEGER_BREITE) {
-    schlaeger_x = ANZEIGE_BREITE - RAND_BREITE - 2 - SCHLAEGER_BREITE + SCHLAEGER_BREITE/2;
-  }
-
-}
-
 
 void male_rechteck (int x, int y, int breite, int hoehe, int farbe) {
   char s[100];
@@ -375,14 +354,9 @@ void loop() {
   }
   */
 
-  leseJoystickAus();
-  berechneSchlaegerPosition();
-  if (schlaeger_x_alt != schlaeger_x) {
+  if (berechneSchlaegerPosition()) {;
         maleSchlaegerNeu();
   }
-
-
-
 
   delay(50);
 }
