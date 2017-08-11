@@ -1,5 +1,7 @@
+// Bildschirmgroesse LCD
 #define ANZEIGE_BREITE 240
 #define ANZEIGE_HOEHE  320
+
 #define RAND_BREITE 2
 
 #define BALL_GROESSE 10
@@ -14,7 +16,6 @@
 #define STEIN_BREITE 25
 #define STEIN_HOEHE 10
 #define STEIN_ABSTAND 3
-
 
 #define STEINE_PRO_REIHE    8
 #define ANZAHL_STEIN_REIHEN 6
