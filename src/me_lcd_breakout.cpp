@@ -24,12 +24,15 @@ extern int schlaeger_x;
 extern int schlaeger_x_alt;
 extern bool berechneSchlaegerPosition();
 
-byte stein_liste[ANZAHL_STEIN_REIHEN][STEINE_PRO_REIHE];
-
-// Zustand des Spieles
-int anzahl_punkte = 0;
-int anzahl_baelle = 3;
-int aktueller_level = 3;
+// Sachen aus spielablauf.cpp
+//
+extern void neues_spiel_beginnen();
+extern void neuer_level();
+extern byte stein_liste[ANZAHL_STEIN_REIHEN][STEINE_PRO_REIHE];
+extern int anzahl_punkte;
+extern int anzahl_baelle;
+extern int aktueller_level;
+extern int anzahl_steine;
 
 
 void maleBallNeu() {
@@ -78,21 +81,29 @@ void steineMalen() {
   for (int i=0; i<ANZAHL_STEIN_REIHEN; ++i) {
     for (int j=0; j<STEINE_PRO_REIHE; ++j) {
 
-        if (stein_liste[i][j] == 1) {
-        male_rechteck(STEINE_START_X + j * (STEIN_BREITE + STEIN_ABSTAND), STEINE_START_Y + i * (STEIN_HOEHE + STEIN_ABSTAND), STEIN_BREITE, STEIN_HOEHE, 1);
+        if (stein_liste[i][j] != 0) {
+        male_rechteck(STEINE_START_X + j * (STEIN_BREITE + STEIN_ABSTAND), STEINE_START_Y + i * (STEIN_HOEHE + STEIN_ABSTAND), STEIN_BREITE, STEIN_HOEHE, stein_liste[i][j]);
         }
     }
   }
 }
 
-
-void steineInitailisieren() {
-  for (int i=0; i<ANZAHL_STEIN_REIHEN; ++i) {
-    for (int j = 0; j < STEINE_PRO_REIHE; ++j) {
-      stein_liste[i][j] = 1;
-    }
+int schlaegerberreich_ermitteln(){
+  int linke_ecke = schlaeger_x - SCHLAEGER_BREITE / 2;
+  int berreich_breite = SCHLAEGER_BREITE / 5;
+  if(linke_ecke <= ball_pos_x && ball_pos_x < linke_ecke + berreich_breite){
+    return 1;
+  } else if(linke_ecke + berreich_breite <= ball_pos_x && ball_pos_x < linke_ecke + 2 * berreich_breite){
+    return 2;
+  } else if(linke_ecke + 2*berreich_breite <= ball_pos_x && ball_pos_x < linke_ecke + 3 * berreich_breite){
+    return 3;
+  }else if(linke_ecke + 3*berreich_breite <= ball_pos_x && ball_pos_x < linke_ecke + 4 * berreich_breite){
+    return 4;
+  }else if(linke_ecke + 4*berreich_breite <= ball_pos_x && ball_pos_x < linke_ecke + 5 * berreich_breite){
+    return 5;
   }
 }
+
 
 
 void berechneBallPosition() {
@@ -109,6 +120,7 @@ void berechneBallPosition() {
         && ball_pos_y + ball_ry + BALL_RADIUS > SCHLAEGER_POS_Y - 1 // Ball ist unterhalb der oberen Schlaegergrenze
           && ball_pos_y + ball_ry - BALL_RADIUS < SCHLAEGER_POS_Y - 1
       ) {
+        int berreich = schlaegerberreich_ermitteln();
       ball_ry = -ball_ry;
 
     }
@@ -148,6 +160,7 @@ void berechneBallPosition() {
      }
   }
 }
+
 
 
 void steinLoeschen(int x, int y) {
@@ -226,6 +239,7 @@ void pruefeBallGegenMauer() {
   if (getroffenerStein != -1) {
     steinLoeschen(getroffenerStein % STEINE_PRO_REIHE, getroffenerStein / STEINE_PRO_REIHE);
     punkte_addieren(1);
+    anzahl_steine--;
 
 
     switch(trefferMuster) {
@@ -307,15 +321,19 @@ void pruefeBallGegenMauer() {
 }
 
 
+
 void setup() {
+
+
 
   ball_pos_x = 20;
   ball_pos_y = 170;
-  ball_rx = 4;
-  ball_ry = 4;
+  ball_rx = 6;
+  ball_ry = 6;
 
   anzeige_initialisieren();
-  steineInitailisieren();
+
+  neues_spiel_beginnen();
 
   rand_malen();
 
@@ -331,6 +349,17 @@ void setup() {
 void loop() {
   berechneBallPosition();
   pruefeBallGegenMauer();
+
+  if (anzahl_steine == 0) {
+      neuer_level();
+      steineMalen();
+
+      ball_pos_x = 20;
+      ball_pos_y = 170;
+      ball_rx = 6;
+      ball_ry = 6;
+  }
+
   maleBallNeu();
   if (berechneSchlaegerPosition()) {;
         maleSchlaegerNeu();

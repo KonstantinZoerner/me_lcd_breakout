@@ -30,3 +30,4 @@
 #define ANZEIGE_START_Y 307
 
 #define MAX_BAELLE 3
+#define GESCHWINDIGKEIT 72
