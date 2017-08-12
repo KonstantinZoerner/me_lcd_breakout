@@ -16,6 +16,8 @@ int ball_ry;
 extern void anzeige_initialisieren();
 extern void buffer_schreiben();
 extern void male_rechteck (int x, int y, int breite, int hoehe, int farbe);
+extern void male_punktstand(int punkte);
+extern void male_rand();
 extern char buffer[];
 
 // Sachen aus schlaeger.cpp
@@ -60,21 +62,12 @@ void male_statische_anzeige_elemente() {
     }
 }
 
-void male_punktstand() {
-  sprintf(buffer, "DS16(%d,%d,'%5d',%d);", ANZEIGE_START_X + 32, ANZEIGE_START_Y, anzahl_punkte, SCHLAEGER_FARBE);
-  buffer_schreiben();
-}
 
 void punkte_addieren(int neue_punkte){
   anzahl_punkte += neue_punkte;
-  male_punktstand();
+  male_punktstand(anzahl_punkte);
 }
 
-void rand_malen(){
-  male_rechteck(0, 0, RAND_BREITE, ANZEIGE_HOEHE, 6);
-  male_rechteck(0, 0, ANZEIGE_BREITE, RAND_BREITE, 6);
-  male_rechteck(ANZEIGE_BREITE - RAND_BREITE - 1, 0, RAND_BREITE, ANZEIGE_HOEHE, 6);
-}
 
 void steineMalen() {
 
@@ -365,10 +358,10 @@ void setup() {
 
   neues_spiel_beginnen();
 
-  rand_malen();
+  male_rand();
 
   male_statische_anzeige_elemente();
-  male_punktstand();
+  male_punktstand(0);
 
   maleSchlaegerNeu();
   steineMalen();
@@ -378,7 +371,9 @@ void setup() {
 
 void loop() {
   berechneBallPosition();
+
   pruefeBallGegenMauer();
+  maleBallNeu();
 
   if (anzahl_steine == 0) {
       neuer_level();
@@ -386,11 +381,14 @@ void loop() {
 
       ball_pos_x = 20;
       ball_pos_y = 170;
+      ball_pos_x_alt = 20;
+      ball_pos_y_alt = 170;
+
       ball_rx = 6;
       ball_ry = 6;
   }
 
-  maleBallNeu();
+
   if (berechneSchlaegerPosition()) {;
         maleSchlaegerNeu();
   }
