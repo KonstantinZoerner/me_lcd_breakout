@@ -30,9 +30,11 @@ byte stein_liste[ANZAHL_STEIN_REIHEN][STEINE_PRO_REIHE];
 
 
 // Zustand des Spieles
-int anzahl_punkte = 1000;
+int anzahl_punkte = 0;
 int anzahl_baelle = 3;
 int aktueller_level = 3;
+
+
 
 
 void steineInitailisieren() {
@@ -65,6 +67,10 @@ void maleAnzeige() {
     	sprintf(buffer, "CIRF(%d,%d,%d,%d);", ANZEIGE_START_X + 190 + i * (BALL_GROESSE+3), ANZEIGE_START_Y + BALL_RADIUS + 2, BALL_RADIUS, SCHLAEGER_FARBE);
     	serial.println(buffer);
     }
+}
+void punkte_addieren(int neue_punkte){
+  anzahl_punkte += neue_punkte;
+  maleAnzeige();
 }
 
 void berechneBallPosition() {
@@ -230,6 +236,7 @@ void pruefeBallGegenMauer() {
 
   if (getroffenerStein != -1) {
     steinLoeschen(getroffenerStein % STEINE_PRO_REIHE, getroffenerStein / STEINE_PRO_REIHE);
+    punkte_addieren(20);
 
 
     switch(trefferMuster) {
