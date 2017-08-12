@@ -26,6 +26,15 @@ void steine_initialisieren(int level) {
       }
       break;
 
+    case 2:
+      for (int i=0; i<ANZAHL_STEIN_REIHEN; ++i) {
+        for (int j = 0; j < STEINE_PRO_REIHE; ++j) {
+          stein_liste[i][j] = 1 + (j%4);
+          anzahl_steine++;
+        }
+      }
+      break;
+
     default:
       for (int i=0; i<ANZAHL_STEIN_REIHEN; ++i) {
         for (int j = 0; j < STEINE_PRO_REIHE; ++j) {

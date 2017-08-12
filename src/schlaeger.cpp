@@ -9,7 +9,7 @@ MeJoystick joystick(6);
 
 bool berechneSchlaegerPosition() {
 
-  int joy_x = joystick.read(1);
+  int joy_x = joystick.readX();
 
   // Alte Position merken
   schlaeger_x_alt = schlaeger_x;
@@ -22,4 +22,8 @@ bool berechneSchlaegerPosition() {
   }
 
   return schlaeger_x != schlaeger_x_alt;
+}
+
+bool joystick_gezogen() {
+  return joystick.readY() > 100;
 }
