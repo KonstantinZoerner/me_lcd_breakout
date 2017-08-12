@@ -25,8 +25,30 @@ void buffer_schreiben() {
   serial.println(buffer);
 }
 
+
+void male_punkte_leiste() {
+
+  // Anzahl Punkte und Level
+  sprintf(buffer, "DS16(%d,%d,'Pts:%5d  Lvl:%2d  Bls: ',%d);", ANZEIGE_START_X, ANZEIGE_START_Y, 0, 0, SCHLAEGER_FARBE);
+  buffer_schreiben();
+
+    // Baelle
+    for (int i = 0; i < MAX_BAELLE; ++i)
+    {
+      sprintf(buffer, "CIRF(%d,%d,%d,%d);", ANZEIGE_START_X + 190 + i * (BALL_GROESSE+3), ANZEIGE_START_Y + BALL_RADIUS + 2, BALL_RADIUS, SCHLAEGER_FARBE);
+      buffer_schreiben();
+    }
+}
+
+
 void male_punktstand(int punkte) {
   sprintf(buffer, "DS16(%d,%d,'%5d',%d);", ANZEIGE_START_X + 32, ANZEIGE_START_Y, punkte, SCHLAEGER_FARBE);
+  serial.println(buffer);
+}
+
+
+void male_level_nr(int level) {
+  sprintf(buffer, "DS16(%d,%d,'%2d',%d);", ANZEIGE_START_X + 64, ANZEIGE_START_Y, level, SCHLAEGER_FARBE);
   serial.println(buffer);
 }
 
