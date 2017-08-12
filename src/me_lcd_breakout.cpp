@@ -88,20 +88,50 @@ void steineMalen() {
   }
 }
 
-int schlaegerberreich_ermitteln(){
+int schlaeger_ermitteln(){
   int linke_ecke = schlaeger_x - SCHLAEGER_BREITE / 2;
-  int berreich_breite = SCHLAEGER_BREITE / 5;
-  if(linke_ecke <= ball_pos_x && ball_pos_x < linke_ecke + berreich_breite){
+  int bereich_breite = SCHLAEGER_BREITE / 5;
+  if(linke_ecke <= ball_pos_x && ball_pos_x < linke_ecke + bereich_breite){
     return 1;
-  } else if(linke_ecke + berreich_breite <= ball_pos_x && ball_pos_x < linke_ecke + 2 * berreich_breite){
+  } else if(linke_ecke + bereich_breite <= ball_pos_x && ball_pos_x < linke_ecke + 2 * bereich_breite){
     return 2;
-  } else if(linke_ecke + 2*berreich_breite <= ball_pos_x && ball_pos_x < linke_ecke + 3 * berreich_breite){
+  } else if(linke_ecke + 2*bereich_breite <= ball_pos_x && ball_pos_x < linke_ecke + 3 * bereich_breite){
     return 3;
-  }else if(linke_ecke + 3*berreich_breite <= ball_pos_x && ball_pos_x < linke_ecke + 4 * berreich_breite){
+  }else if(linke_ecke + 3*bereich_breite <= ball_pos_x && ball_pos_x < linke_ecke + 4 * bereich_breite){
     return 4;
-  }else if(linke_ecke + 4*berreich_breite <= ball_pos_x && ball_pos_x < linke_ecke + 5 * berreich_breite){
+  }else if(linke_ecke + 4*bereich_breite <= ball_pos_x && ball_pos_x < linke_ecke + 5 * bereich_breite){
     return 5;
   }
+}
+
+void ball_richtung_aendern(int bereich){
+  if(bereich == 1){
+    if (-6 < ball_rx and ball_rx < 9){
+    ball_rx -= 2;
+    ball_ry = -sqrt(GESCHWINDIGKEIT - ball_rx * ball_rx);
+  }
+} else if(bereich == 2){
+  if (-6 < ball_rx and ball_rx < 9){
+  ball_rx-- ;
+  ball_ry = -sqrt(GESCHWINDIGKEIT - ball_rx * ball_rx);
+}
+}else if(bereich == 3){
+
+  ball_rx = ball_rx;
+  ball_ry = -ball_ry;
+
+}else if(bereich == 4){
+  if (-9 < ball_rx and ball_rx < 6){
+  ball_rx++;
+  ball_ry = -sqrt(GESCHWINDIGKEIT - ball_rx * ball_rx);
+}
+}else if(bereich == 5){
+  if (-9 < ball_rx and ball_rx < 6){
+  ball_rx += 2;
+  ball_ry = -sqrt(GESCHWINDIGKEIT - ball_rx * ball_rx);
+}
+}
+
 }
 
 
@@ -120,8 +150,8 @@ void berechneBallPosition() {
         && ball_pos_y + ball_ry + BALL_RADIUS > SCHLAEGER_POS_Y - 1 // Ball ist unterhalb der oberen Schlaegergrenze
           && ball_pos_y + ball_ry - BALL_RADIUS < SCHLAEGER_POS_Y - 1
       ) {
-        int berreich = schlaegerberreich_ermitteln();
-      ball_ry = -ball_ry;
+        int bereich = schlaeger_ermitteln();
+      ball_richtung_aendern(bereich);
 
     }
   }
