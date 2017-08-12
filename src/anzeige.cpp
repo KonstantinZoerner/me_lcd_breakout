@@ -52,6 +52,21 @@ void male_level_nr(int level) {
   serial.println(buffer);
 }
 
+void male_anzahl_baelle(int anzahl) {
+  // Baelle
+  for (int i = 0; i < MAX_BAELLE; ++i)
+  {
+    if (anzahl > i) {
+      sprintf(buffer, "CIRF(%d,%d,%d,%d);",
+        ANZEIGE_START_X + 190 + i * (BALL_GROESSE+3), ANZEIGE_START_Y + BALL_RADIUS + 2, BALL_RADIUS, SCHLAEGER_FARBE);
+    } else {
+      sprintf(buffer, "CIR(%d,%d,%d,%d);",
+        ANZEIGE_START_X + 190 + i * (BALL_GROESSE+3), ANZEIGE_START_Y + BALL_RADIUS + 2, BALL_RADIUS, SCHLAEGER_FARBE);
+    }
+  }
+  buffer_schreiben();
+}
+
 
 void male_rand() {
   male_rechteck(0, 0, RAND_BREITE, ANZEIGE_HOEHE, 6);
