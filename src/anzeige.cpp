@@ -24,3 +24,15 @@ void male_rechteck (int x, int y, int breite, int hoehe, int farbe) {
 void buffer_schreiben() {
   serial.println(buffer);
 }
+
+void male_punktstand(int punkte) {
+  sprintf(buffer, "DS16(%d,%d,'%5d',%d);", ANZEIGE_START_X + 32, ANZEIGE_START_Y, punkte, SCHLAEGER_FARBE);
+  serial.println(buffer);
+}
+
+
+void male_rand() {
+  male_rechteck(0, 0, RAND_BREITE, ANZEIGE_HOEHE, 6);
+  male_rechteck(0, 0, ANZEIGE_BREITE, RAND_BREITE, 6);
+  male_rechteck(ANZEIGE_BREITE - RAND_BREITE - 1, 0, RAND_BREITE, ANZEIGE_HOEHE, 6);
+}
