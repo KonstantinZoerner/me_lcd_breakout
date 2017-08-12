@@ -5,8 +5,6 @@
 
 #include "konstanten.h"
 
-MeSerial serial(PORT_5);
-
 int ball_pos_x;
 int ball_pos_y;
 
@@ -16,6 +14,13 @@ int ball_pos_y_alt;
 int ball_rx;
 int ball_ry;
 
+// Sachen aus anzeige.cpp
+//
+extern void anzeige_initialisieren();
+extern void buffer_schreiben();
+extern void male_rechteck (int x, int y, int breite, int hoehe, int farbe);
+extern char buffer[];
+
 // Sachen aus schlaeger.c
 //
 extern int schlaeger_x;
@@ -23,8 +28,6 @@ extern int schlaeger_x_alt;
 extern bool berechneSchlaegerPosition();
 
 int abgeprallt = 0;
-
-char buffer[80];
 
 byte stein_liste[ANZAHL_STEIN_REIHEN][STEINE_PRO_REIHE];
 
@@ -47,26 +50,31 @@ void steineInitailisieren() {
 
 void maleBallNeu() {
     sprintf(buffer, "CIRF(%d,%d,%d,0);CIRF(%d,%d,%d,%d);", ball_pos_x_alt, ball_pos_y_alt, BALL_RADIUS, ball_pos_x, ball_pos_y, BALL_RADIUS, BALL_FARBE);
-    serial.println(buffer);
+    buffer_schreiben();
 }
 
 void maleSchlaegerNeu() {
   sprintf(buffer, "BOXF(%d,%d,%d,%d,%d);BOXF(%d,%d,%d,%d,%d);",schlaeger_x_alt - SCHLAEGER_BREITE/2, SCHLAEGER_POS_Y, schlaeger_x_alt - SCHLAEGER_BREITE/2 + SCHLAEGER_BREITE, SCHLAEGER_POS_Y + SCHLAEGER_HOEHE, 0, schlaeger_x - SCHLAEGER_BREITE/2, SCHLAEGER_POS_Y, schlaeger_x - SCHLAEGER_BREITE/2 + SCHLAEGER_BREITE, SCHLAEGER_POS_Y + SCHLAEGER_HOEHE, SCHLAEGER_FARBE);
-  serial.println(buffer);
+  buffer_schreiben();
 }
 
 void maleAnzeige() {
 
 	// Anzahl Punkte und Level
 	sprintf(buffer, "DS16(%d,%d,'Pts:%5d  Lvl:%2d  Bls: ',%d);", ANZEIGE_START_X, ANZEIGE_START_Y, anzahl_punkte, aktueller_level, SCHLAEGER_FARBE);
-	serial.println(buffer);
+	buffer_schreiben();
 
     // Baelle
     for (int i = 0; i < MAX_BAELLE; ++i)
     {
     	sprintf(buffer, "CIRF(%d,%d,%d,%d);", ANZEIGE_START_X + 190 + i * (BALL_GROESSE+3), ANZEIGE_START_Y + BALL_RADIUS + 2, BALL_RADIUS, SCHLAEGER_FARBE);
-    	serial.println(buffer);
+    	buffer_schreiben();
     }
+}
+
+
+void maleStatischeAnzeigenElemente(){
+
 }
 void punkte_addieren(int neue_punkte){
   anzahl_punkte += neue_punkte;
@@ -133,14 +141,6 @@ void berechneBallPosition() {
           ball_ry = -ball_ry;
      }
   }
-}
-
-void male_rechteck (int x, int y, int breite, int hoehe, int farbe) {
-  char s[100];
-  sprintf(s, "BOXF(%d,%d,%d,%d,%d);", x, y, x + breite, y + hoehe, farbe);
-
-  serial.println(s);
-
 }
 
 void rand_malen(){
@@ -325,12 +325,7 @@ void setup() {
   ball_rx = 4;
   ball_ry = 4;
 
-  serial.begin(9600);
-  serial.print("DR1;");    // the screen displays in upright way
-  serial.println("CLS(0);");
-  serial.println("");
-  serial.println("DS24(64,104,' ',5);");
-
+  anzeige_initialisieren();
   steineInitailisieren();
 
   maleAnzeige();
