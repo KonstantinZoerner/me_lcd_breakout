@@ -27,10 +27,7 @@ extern int schlaeger_x;
 extern int schlaeger_x_alt;
 extern bool berechneSchlaegerPosition();
 
-int abgeprallt = 0;
-
 byte stein_liste[ANZAHL_STEIN_REIHEN][STEINE_PRO_REIHE];
-
 
 // Zustand des Spieles
 int anzahl_punkte = 0;
@@ -38,6 +35,60 @@ int anzahl_baelle = 3;
 int aktueller_level = 3;
 
 
+
+
+void maleBallNeu() {
+    sprintf(buffer, "CIRF(%d,%d,%d,0);CIRF(%d,%d,%d,%d);", ball_pos_x_alt, ball_pos_y_alt, BALL_RADIUS, ball_pos_x, ball_pos_y, BALL_RADIUS, BALL_FARBE);
+    buffer_schreiben();
+}
+
+
+void maleSchlaegerNeu() {
+  sprintf(buffer, "BOXF(%d,%d,%d,%d,%d);BOXF(%d,%d,%d,%d,%d);",schlaeger_x_alt - SCHLAEGER_BREITE/2, SCHLAEGER_POS_Y, schlaeger_x_alt - SCHLAEGER_BREITE/2 + SCHLAEGER_BREITE, SCHLAEGER_POS_Y + SCHLAEGER_HOEHE, 0, schlaeger_x - SCHLAEGER_BREITE/2, SCHLAEGER_POS_Y, schlaeger_x - SCHLAEGER_BREITE/2 + SCHLAEGER_BREITE, SCHLAEGER_POS_Y + SCHLAEGER_HOEHE, SCHLAEGER_FARBE);
+  buffer_schreiben();
+}
+
+
+void male_statische_anzeige_elemente() {
+  // Anzahl Punkte und Level
+  sprintf(buffer, "DS16(%d,%d,'Pts:%5d  Lvl:%2d  Bls: ',%d);", ANZEIGE_START_X, ANZEIGE_START_Y, 0, 0, SCHLAEGER_FARBE);
+  buffer_schreiben();
+
+    // Baelle
+    for (int i = 0; i < MAX_BAELLE; ++i)
+    {
+      sprintf(buffer, "CIRF(%d,%d,%d,%d);", ANZEIGE_START_X + 190 + i * (BALL_GROESSE+3), ANZEIGE_START_Y + BALL_RADIUS + 2, BALL_RADIUS, SCHLAEGER_FARBE);
+      buffer_schreiben();
+    }
+}
+
+void male_punktstand() {
+  sprintf(buffer, "DS16(%d,%d,'%5d',%d);", ANZEIGE_START_X + 32, ANZEIGE_START_Y, anzahl_punkte, SCHLAEGER_FARBE);
+  buffer_schreiben();
+}
+
+void punkte_addieren(int neue_punkte){
+  anzahl_punkte += neue_punkte;
+  male_punktstand();
+}
+
+void rand_malen(){
+  male_rechteck(0, 0, RAND_BREITE, ANZEIGE_HOEHE, 6);
+  male_rechteck(0, 0, ANZEIGE_BREITE, RAND_BREITE, 6);
+  male_rechteck(ANZEIGE_BREITE - RAND_BREITE - 1, 0, RAND_BREITE, ANZEIGE_HOEHE, 6);
+}
+
+void steineMalen() {
+
+  for (int i=0; i<ANZAHL_STEIN_REIHEN; ++i) {
+    for (int j=0; j<STEINE_PRO_REIHE; ++j) {
+
+        if (stein_liste[i][j] == 1) {
+        male_rechteck(STEINE_START_X + j * (STEIN_BREITE + STEIN_ABSTAND), STEINE_START_Y + i * (STEIN_HOEHE + STEIN_ABSTAND), STEIN_BREITE, STEIN_HOEHE, 1);
+        }
+    }
+  }
+}
 
 
 void steineInitailisieren() {
@@ -48,38 +99,6 @@ void steineInitailisieren() {
   }
 }
 
-void maleBallNeu() {
-    sprintf(buffer, "CIRF(%d,%d,%d,0);CIRF(%d,%d,%d,%d);", ball_pos_x_alt, ball_pos_y_alt, BALL_RADIUS, ball_pos_x, ball_pos_y, BALL_RADIUS, BALL_FARBE);
-    buffer_schreiben();
-}
-
-void maleSchlaegerNeu() {
-  sprintf(buffer, "BOXF(%d,%d,%d,%d,%d);BOXF(%d,%d,%d,%d,%d);",schlaeger_x_alt - SCHLAEGER_BREITE/2, SCHLAEGER_POS_Y, schlaeger_x_alt - SCHLAEGER_BREITE/2 + SCHLAEGER_BREITE, SCHLAEGER_POS_Y + SCHLAEGER_HOEHE, 0, schlaeger_x - SCHLAEGER_BREITE/2, SCHLAEGER_POS_Y, schlaeger_x - SCHLAEGER_BREITE/2 + SCHLAEGER_BREITE, SCHLAEGER_POS_Y + SCHLAEGER_HOEHE, SCHLAEGER_FARBE);
-  buffer_schreiben();
-}
-
-void maleAnzeige() {
-
-	// Anzahl Punkte und Level
-	sprintf(buffer, "DS16(%d,%d,'Pts:%5d  Lvl:%2d  Bls: ',%d);", ANZEIGE_START_X, ANZEIGE_START_Y, anzahl_punkte, aktueller_level, SCHLAEGER_FARBE);
-	buffer_schreiben();
-
-    // Baelle
-    for (int i = 0; i < MAX_BAELLE; ++i)
-    {
-    	sprintf(buffer, "CIRF(%d,%d,%d,%d);", ANZEIGE_START_X + 190 + i * (BALL_GROESSE+3), ANZEIGE_START_Y + BALL_RADIUS + 2, BALL_RADIUS, SCHLAEGER_FARBE);
-    	buffer_schreiben();
-    }
-}
-
-
-void maleStatischeAnzeigenElemente(){
-
-}
-void punkte_addieren(int neue_punkte){
-  anzahl_punkte += neue_punkte;
-  maleAnzeige();
-}
 
 void berechneBallPosition() {
 
@@ -87,10 +106,6 @@ void berechneBallPosition() {
   //
   ball_pos_x_alt = ball_pos_x;
   ball_pos_y_alt = ball_pos_y;
-
-  if (abgeprallt == 1 && ball_ry < 0){
-    abgeprallt = 0;
-  }
 
   // Abprallen am Schlaeger
   if (ball_ry > 0) {
@@ -100,13 +115,9 @@ void berechneBallPosition() {
           && ball_pos_y + ball_ry - BALL_RADIUS < SCHLAEGER_POS_Y - 1
       ) {
       ball_ry = -ball_ry;
-      abgeprallt = 1;
 
     }
-
   }
-
-
 
   // Bewegung X-Richtung
   //
@@ -143,24 +154,6 @@ void berechneBallPosition() {
   }
 }
 
-void rand_malen(){
-  male_rechteck(0, 0, RAND_BREITE, ANZEIGE_HOEHE, 6);
-  male_rechteck(0, 0, ANZEIGE_BREITE, RAND_BREITE, 6);
-  male_rechteck(ANZEIGE_BREITE - RAND_BREITE - 1, 0, RAND_BREITE, ANZEIGE_HOEHE, 6);
-
-}
-
-void steineMalen() {
-
-  for (int i=0; i<ANZAHL_STEIN_REIHEN; ++i) {
-    for (int j=0; j<STEINE_PRO_REIHE; ++j) {
-
-        if (stein_liste[i][j] == 1) {
-        male_rechteck(STEINE_START_X + j * (STEIN_BREITE + STEIN_ABSTAND), STEINE_START_Y + i * (STEIN_HOEHE + STEIN_ABSTAND), STEIN_BREITE, STEIN_HOEHE, 1);
-        }
-    }
-  }
-}
 
 void steinLoeschen(int x, int y) {
   if (stein_liste[y][x] != 0) {
@@ -170,11 +163,13 @@ void steinLoeschen(int x, int y) {
 }
 
 int ermittelSteinFuerPixel (int x, int y) {
-  if (y < STEINE_START_Y || y > STEINE_START_Y + (STEIN_HOEHE + STEIN_ABSTAND) * ANZAHL_STEIN_REIHEN) {
+  if (y < STEINE_START_Y
+        || y > STEINE_START_Y + (STEIN_HOEHE + STEIN_ABSTAND) * ANZAHL_STEIN_REIHEN -1) {
     return -1;
   }
 
-  if (x < STEINE_START_X || x > STEINE_START_X + (STEIN_BREITE + STEIN_ABSTAND) * STEINE_PRO_REIHE) {
+  if (x < STEINE_START_X
+        || x > STEINE_START_X + (STEIN_BREITE + STEIN_ABSTAND) * STEINE_PRO_REIHE -1) {
     return -1;
   }
 
@@ -186,7 +181,6 @@ int ermittelSteinFuerPixel (int x, int y) {
   } else {
     return -1; // kein Stein an der der Stelle.
   }
-
 }
 
 void pruefeBallGegenMauer() {
@@ -236,7 +230,7 @@ void pruefeBallGegenMauer() {
 
   if (getroffenerStein != -1) {
     steinLoeschen(getroffenerStein % STEINE_PRO_REIHE, getroffenerStein / STEINE_PRO_REIHE);
-    punkte_addieren(20);
+    punkte_addieren(1);
 
 
     switch(trefferMuster) {
@@ -328,9 +322,11 @@ void setup() {
   anzeige_initialisieren();
   steineInitailisieren();
 
-  maleAnzeige();
-
   rand_malen();
+
+  male_statische_anzeige_elemente();
+  male_punktstand();
+
   maleSchlaegerNeu();
   steineMalen();
 
