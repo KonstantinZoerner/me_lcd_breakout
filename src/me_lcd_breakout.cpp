@@ -32,8 +32,6 @@ int anzahl_baelle = 3;
 int aktueller_level = 3;
 
 
-
-
 void maleBallNeu() {
     sprintf(buffer, "CIRF(%d,%d,%d,0);CIRF(%d,%d,%d,%d);", ball_pos_x_alt, ball_pos_y_alt, BALL_RADIUS, ball_pos_x, ball_pos_y, BALL_RADIUS, BALL_FARBE);
     buffer_schreiben();
@@ -327,31 +325,15 @@ void setup() {
   maleSchlaegerNeu();
   steineMalen();
 
-
   delay(1000);
-
-
-
 }
 
-
 void loop() {
-
-
   berechneBallPosition();
   pruefeBallGegenMauer();
   maleBallNeu();
-  /*
-  if (abgeprallt == 1){
-      male_rechteck(0,0,10,10,4);
-  }else{
-      male_rechteck(0,0,10,10,0);
-  }
-  */
-
   if (berechneSchlaegerPosition()) {;
         maleSchlaegerNeu();
   }
-
   delay(50);
 }
