@@ -134,7 +134,7 @@ void berechneBallPosition() {
     if (ball_pos_x + ball_rx + BALL_RADIUS > schlaeger_x - SCHLAEGER_BREITE/2 // Ball rechts vom linken Rand des Schlaegers
       && ball_pos_x + ball_rx - BALL_RADIUS < schlaeger_x + SCHLAEGER_BREITE/2 // Ball ist links vom rechten Rand
         && ball_pos_y + ball_ry + BALL_RADIUS > SCHLAEGER_POS_Y - 1 // Ball ist unterhalb der oberen Schlaegergrenze
-          && ball_pos_y + ball_ry - BALL_RADIUS < SCHLAEGER_POS_Y - 1
+          && ball_pos_y + ball_ry - BALL_RADIUS < SCHLAEGER_POS_Y + SCHLAEGER_HOEHE - 1
       ) {
         int bereich = schlaeger_ermitteln();
       ball_richtung_aendern(bereich);
