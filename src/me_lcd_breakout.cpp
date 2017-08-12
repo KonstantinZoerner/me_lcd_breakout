@@ -1,8 +1,5 @@
 #include <Arduino.h>
 
-#include <SoftwareSerial.h>
-#include <MeSerial.h>
-
 #include "konstanten.h"
 
 int ball_pos_x;
@@ -21,7 +18,7 @@ extern void buffer_schreiben();
 extern void male_rechteck (int x, int y, int breite, int hoehe, int farbe);
 extern char buffer[];
 
-// Sachen aus schlaeger.c
+// Sachen aus schlaeger.cpp
 //
 extern int schlaeger_x;
 extern int schlaeger_x_alt;
