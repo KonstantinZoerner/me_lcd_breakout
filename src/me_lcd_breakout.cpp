@@ -16,7 +16,10 @@ int ball_ry;
 extern void anzeige_initialisieren();
 extern void buffer_schreiben();
 extern void male_rechteck (int x, int y, int breite, int hoehe, int farbe);
+extern void male_punkte_leiste();
 extern void male_punktstand(int punkte);
+extern void male_level_nr(int lvl);
+extern void male_anzahl_baelle(int anzahl);
 extern void male_rand();
 extern char buffer[];
 
@@ -46,20 +49,6 @@ void maleBallNeu() {
 void maleSchlaegerNeu() {
   sprintf(buffer, "BOXF(%d,%d,%d,%d,%d);BOXF(%d,%d,%d,%d,%d);",schlaeger_x_alt - SCHLAEGER_BREITE/2, SCHLAEGER_POS_Y, schlaeger_x_alt - SCHLAEGER_BREITE/2 + SCHLAEGER_BREITE, SCHLAEGER_POS_Y + SCHLAEGER_HOEHE, 0, schlaeger_x - SCHLAEGER_BREITE/2, SCHLAEGER_POS_Y, schlaeger_x - SCHLAEGER_BREITE/2 + SCHLAEGER_BREITE, SCHLAEGER_POS_Y + SCHLAEGER_HOEHE, SCHLAEGER_FARBE);
   buffer_schreiben();
-}
-
-
-void male_statische_anzeige_elemente() {
-  // Anzahl Punkte und Level
-  sprintf(buffer, "DS16(%d,%d,'Pts:%5d  Lvl:%2d  Bls: ',%d);", ANZEIGE_START_X, ANZEIGE_START_Y, 0, 0, SCHLAEGER_FARBE);
-  buffer_schreiben();
-
-    // Baelle
-    for (int i = 0; i < MAX_BAELLE; ++i)
-    {
-      sprintf(buffer, "CIRF(%d,%d,%d,%d);", ANZEIGE_START_X + 190 + i * (BALL_GROESSE+3), ANZEIGE_START_Y + BALL_RADIUS + 2, BALL_RADIUS, SCHLAEGER_FARBE);
-      buffer_schreiben();
-    }
 }
 
 
@@ -94,6 +83,8 @@ int schlaeger_ermitteln(){
     return 4;
   }else if(linke_ecke + 4*bereich_breite <= ball_pos_x && ball_pos_x < linke_ecke + 5 * bereich_breite){
     return 5;
+  }else{
+    return 3;
   }
 }
 
@@ -103,7 +94,7 @@ void ball_richtung_aendern(int bereich){
     ball_rx -= 2;
     ball_ry = -sqrt(GESCHWINDIGKEIT - ball_rx * ball_rx);
   }
-} else if(bereich == 2){
+}else if(bereich == 2){
   if (-6 < ball_rx and ball_rx < 9){
   ball_rx-- ;
   ball_ry = -sqrt(GESCHWINDIGKEIT - ball_rx * ball_rx);
@@ -123,6 +114,8 @@ void ball_richtung_aendern(int bereich){
   ball_rx += 2;
   ball_ry = -sqrt(GESCHWINDIGKEIT - ball_rx * ball_rx);
 }
+}else{
+  ball_ry = -ball_ry;
 }
 
 }
@@ -360,8 +353,10 @@ void setup() {
 
   male_rand();
 
-  male_statische_anzeige_elemente();
+  male_punkte_leiste();
   male_punktstand(0);
+  male_level_nr(aktueller_level);
+  male_anzahl_baelle(3);
 
   maleSchlaegerNeu();
   steineMalen();
@@ -378,6 +373,7 @@ void loop() {
   if (anzahl_steine == 0) {
       neuer_level();
       steineMalen();
+      male_level_nr(aktueller_level);
 
       ball_pos_x = 20;
       ball_pos_y = 170;

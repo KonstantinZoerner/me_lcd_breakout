@@ -32,12 +32,14 @@ void male_punkte_leiste() {
   sprintf(buffer, "DS16(%d,%d,'Pts:%5d  Lvl:%2d  Bls: ',%d);", ANZEIGE_START_X, ANZEIGE_START_Y, 0, 0, SCHLAEGER_FARBE);
   buffer_schreiben();
 
+/*
     // Baelle
     for (int i = 0; i < MAX_BAELLE; ++i)
     {
       sprintf(buffer, "CIRF(%d,%d,%d,%d);", ANZEIGE_START_X + 190 + i * (BALL_GROESSE+3), ANZEIGE_START_Y + BALL_RADIUS + 2, BALL_RADIUS, SCHLAEGER_FARBE);
       buffer_schreiben();
     }
+    */
 }
 
 
@@ -47,8 +49,8 @@ void male_punktstand(int punkte) {
 }
 
 
-void male_level_nr(int level) {
-  sprintf(buffer, "DS16(%d,%d,'%2d',%d);", ANZEIGE_START_X + 64, ANZEIGE_START_Y, level, SCHLAEGER_FARBE);
+void male_level_nr(int lvl) {
+  sprintf(buffer, "DS16(%d,%d,'%2d',%d);", ANZEIGE_START_X + 120, ANZEIGE_START_Y, lvl, SCHLAEGER_FARBE);
   serial.println(buffer);
 }
 
@@ -63,8 +65,8 @@ void male_anzahl_baelle(int anzahl) {
       sprintf(buffer, "CIR(%d,%d,%d,%d);",
         ANZEIGE_START_X + 190 + i * (BALL_GROESSE+3), ANZEIGE_START_Y + BALL_RADIUS + 2, BALL_RADIUS, SCHLAEGER_FARBE);
     }
+    buffer_schreiben();
   }
-  buffer_schreiben();
 }
 
 
