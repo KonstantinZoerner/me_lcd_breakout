@@ -17,6 +17,8 @@ void anzeige_initialisieren() {
 }
 
 
+/** Male ein gefuelltes Rechteck auf den Bildschirm.
+*/
 void male_rechteck (int x, int y, int breite, int hoehe, int farbe) {
   sprintf(buffer, "BOXF(%d,%d,%d,%d,%d);", x, y, x + breite, y + hoehe, farbe);
   serial.println(buffer);
@@ -24,13 +26,6 @@ void male_rechteck (int x, int y, int breite, int hoehe, int farbe) {
 
 
 void buffer_schreiben() {
-  serial.println(buffer);
-}
-
-
-void male_punkte_leiste() {
-  sprintf(buffer, "DS16(%d,%d,'Pts:%5d  Lvl:%2d  Bls: ',%d);",
-      ANZEIGE_START_X, ANZEIGE_START_Y, 0, 0, SCHLAEGER_FARBE);
   serial.println(buffer);
 }
 
@@ -63,6 +58,15 @@ void male_anzahl_baelle(int anzahl) {
   }
 }
 
+void male_punkte_leiste() {
+  sprintf(buffer, "DS16(%d,%d,'Pts:%5d  Lvl:%2d  Bls: ',%d);",
+      ANZEIGE_START_X, ANZEIGE_START_Y, 0, 0, SCHLAEGER_FARBE);
+  serial.println(buffer);
+
+  male_punktstand(0);
+  male_level_nr(0);
+  male_anzahl_baelle(0);
+}
 
 void male_rand() {
   male_rechteck(0, 0, RAND_BREITE, ANZEIGE_HOEHE, 6);
