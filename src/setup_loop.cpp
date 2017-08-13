@@ -14,6 +14,9 @@ extern void steineMalen();
 extern void berechneBallPosition();
 extern void pruefeBallGegenMauer();
 
+/**
+Ardunino-Initialisierungsfunktion. Wird beim Start 1x aufgerufen.
+*/
 void setup() {
 
 neuen_ball_starten();
@@ -35,6 +38,9 @@ neuen_ball_starten();
   delay(1000);
 }
 
+/**
+Ardunino-Schleife. Wird immer und immer wieder aufgerufen.
+*/
 void loop() {
   if (anzahl_steine == 0) {
       neuen_ball_starten();
