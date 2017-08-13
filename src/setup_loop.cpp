@@ -1,17 +1,10 @@
 #include <Arduino.h>
 
 #include "anzeige.h"
+#include "spielablauf.h"
+
 
 extern bool berechneSchlaegerPosition();
-
-// Sachen aus spielablauf.cpp
-//
-extern void neues_spiel_beginnen();
-extern void neuer_level();
-extern int anzahl_punkte;
-extern int anzahl_baelle;
-extern int aktueller_level;
-extern int anzahl_steine;
 
 // Sachen aus me_lcd_...
 extern void neuen_ball_starten();
