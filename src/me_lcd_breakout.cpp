@@ -350,57 +350,11 @@ void pruefeBallGegenMauer() {
   }
 }
 
-
-
-void setup() {
-
-
-
+void neuen_ball_starten() {
   ball_pos_x = 20;
   ball_pos_y = 170;
   ball_rx = 6;
   ball_ry = 6;
-
-  anzeige_initialisieren();
-
-  neues_spiel_beginnen();
-
-  male_rand();
-
-  male_punkte_leiste();
-  male_punktstand(0);
-  male_level_nr(aktueller_level);
-  male_anzahl_baelle(3);
-
-  maleSchlaegerNeu();
-  steineMalen();
-
-  delay(1000);
-}
-
-void loop() {
-  berechneBallPosition();
-
-  pruefeBallGegenMauer();
-  maleBallNeu();
-
-  if (anzahl_steine == 0) {
-      neuer_level();
-      steineMalen();
-      male_level_nr(aktueller_level);
-
-      ball_pos_x = 20;
-      ball_pos_y = 170;
-      ball_pos_x_alt = 20;
-      ball_pos_y_alt = 170;
-
-      ball_rx = 6;
-      ball_ry = 6;
-  }
-
-
-  if (berechneSchlaegerPosition()) {;
-        maleSchlaegerNeu();
-  }
-  delay(50);
+  ball_pos_x_alt = 20;
+  ball_pos_y_alt = 170;
 }
