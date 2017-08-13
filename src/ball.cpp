@@ -114,19 +114,15 @@ void berechneBallPosition() {
         && ball_pos_y + ball_ry + BALL_RADIUS > SCHLAEGER_POS_Y - 1// Ball ist unterhalb der oberen Schlaegergrenze
           && ball_pos_y + ball_ry - BALL_RADIUS < SCHLAEGER_POS_Y + SCHLAEGER_HOEHE - 1
       ) {
-        male_rechteck(0,0,10,10,4);
+
         int bereich = schlaeger_ermitteln();
-        sprintf(buffer, "DS16(%d,%d,'ber=%d',4);", 10, 0, bereich);
-        buffer_schreiben();
+
 
       ball_richtung_aendern(bereich);
-      sprintf(buffer, "DS16(%d,%d,'x_r=%5d',4);", 70, 0, ball_rx);
-      buffer_schreiben();
+
 
     }
-  } else{
-    male_rechteck(0,0,10,10,0);
-  }
+  } 
 
   // Bewegung X-Richtung
   //
@@ -332,4 +328,19 @@ void neuen_ball_starten() {
   ball_ry = 6;
   ball_pos_x_alt = 20;
   ball_pos_y_alt = 170;
+}
+
+bool ball_raus_ueberpruefen(){
+    return (ball_pos_y - BALL_RADIUS > SCHLAEGER_POS_Y + SCHLAEGER_HOEHE);
+  }
+
+void ball_platzen(){
+  for(int i = 1; i < 6; i++) {
+    sprintf(buffer, "CIRF(%d,%d,%d,0);CIR(%d,%d,%d,%d);", ball_pos_x, ball_pos_y, BALL_RADIUS + i - 1, ball_pos_x, ball_pos_y, BALL_RADIUS + i, BALL_FARBE);
+    buffer_schreiben();
+    delay(50);
+  }
+  sprintf(buffer, "CIRF(%d,%d,%d,0);", ball_pos_x, ball_pos_y, BALL_RADIUS + 5);
+  buffer_schreiben();
+
 }

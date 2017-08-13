@@ -5,6 +5,7 @@
 
 extern void neues_spiel_beginnen();
 extern void neuer_level();
+extern void ball_verlieren();
 
 extern int anzahl_punkte;
 extern int anzahl_baelle;

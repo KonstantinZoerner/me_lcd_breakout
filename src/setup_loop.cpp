@@ -6,13 +6,7 @@
 
 extern bool berechneSchlaegerPosition();
 
-// Sachen aus me_lcd_...
-extern void neuen_ball_starten();
-extern void maleBallNeu();
-extern void maleSchlaegerNeu();
-extern void steineMalen();
-extern void berechneBallPosition();
-extern void pruefeBallGegenMauer();
+#include "ball.h"
 
 /**
 Ardunino-Initialisierungsfunktion. Wird beim Start 1x aufgerufen.
@@ -54,6 +48,11 @@ void loop() {
 
   pruefeBallGegenMauer();
   maleBallNeu();
+  if (ball_raus_ueberpruefen()){
+    ball_platzen();
+    ball_verlieren();
+    neuen_ball_starten();
+  }
 
 
 
