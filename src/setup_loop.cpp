@@ -36,18 +36,20 @@ neuen_ball_starten();
 }
 
 void loop() {
+  if (anzahl_steine == 0) {
+      neuen_ball_starten();
+      neuer_level();
+      steineMalen();
+      male_level_nr(aktueller_level);
+
+
+  }
   berechneBallPosition();
 
   pruefeBallGegenMauer();
   maleBallNeu();
 
-  if (anzahl_steine == 0) {
-      neuer_level();
-      steineMalen();
-      male_level_nr(aktueller_level);
 
-      neuen_ball_starten();
-  }
 
 
   if (berechneSchlaegerPosition()) {;
