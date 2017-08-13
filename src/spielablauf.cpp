@@ -52,7 +52,7 @@ void neues_spiel_beginnen() {
   aktueller_level = 1;
   anzahl_punkte   = 0;
 
-  steine_initialisieren(1);
+  steine_initialisieren(aktueller_level);
 }
 
 
