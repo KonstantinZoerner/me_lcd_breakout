@@ -3,13 +3,7 @@
 #include "konstanten.h"
 #include "anzeige.h"
 #include "spielablauf.h"
-
-// Sachen aus schlaeger.cpp
-//
-extern int schlaeger_x;
-extern int schlaeger_x_alt;
-extern bool berechneSchlaegerPosition();
-
+#include "schlaeger.h"
 
 int ball_pos_x;
 int ball_pos_y;
@@ -25,7 +19,7 @@ int ball_ry;
 
 
 void maleBallNeu() {
-    sprintf(buffer, "CIR(%d,%d,%d,0);CIRF(%d,%d,%d,%d);", ball_pos_x_alt, ball_pos_y_alt, BALL_RADIUS, ball_pos_x, ball_pos_y, BALL_RADIUS, BALL_FARBE);
+    sprintf(buffer, "CIRF(%d,%d,%d,0);CIRF(%d,%d,%d,%d);", ball_pos_x_alt, ball_pos_y_alt, BALL_RADIUS, ball_pos_x, ball_pos_y, BALL_RADIUS, BALL_FARBE);
     buffer_schreiben();
 }
 
@@ -335,10 +329,10 @@ void pruefeBallGegenMauer() {
 }
 
 void neuen_ball_starten() {
+  ball_pos_x_alt = ball_pos_x;
+  ball_pos_y_alt = ball_pos_y;
   ball_pos_x = 20;
   ball_pos_y = 170;
-  ball_pos_x_alt = ball_pos_x - ball_ry;
-  ball_pos_y_alt = ball_pos_y - ball_ry;
   maleBallNeu();
   ball_rx = 6;
   ball_ry = 6;

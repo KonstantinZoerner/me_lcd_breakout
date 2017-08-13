@@ -17,8 +17,8 @@
 #define STEIN_HOEHE 10
 #define STEIN_ABSTAND 3
 
-#define STEINE_PRO_REIHE    1  // 8
-#define ANZAHL_STEIN_REIHEN 1  // 6
+#define STEINE_PRO_REIHE    8
+#define ANZAHL_STEIN_REIHEN 6
 
 // Postionen (Pixel), ab denen die Mauer gemalt wird
 //
