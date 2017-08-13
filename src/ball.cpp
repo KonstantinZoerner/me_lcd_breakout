@@ -24,12 +24,6 @@ void maleBallNeu() {
 }
 
 
-void maleSchlaegerNeu() {
-  sprintf(buffer, "BOXF(%d,%d,%d,%d,%d);BOXF(%d,%d,%d,%d,%d);",schlaeger_x_alt - SCHLAEGER_BREITE/2, SCHLAEGER_POS_Y, schlaeger_x_alt - SCHLAEGER_BREITE/2 + SCHLAEGER_BREITE, SCHLAEGER_POS_Y + SCHLAEGER_HOEHE, 0, schlaeger_x - SCHLAEGER_BREITE/2, SCHLAEGER_POS_Y, schlaeger_x - SCHLAEGER_BREITE/2 + SCHLAEGER_BREITE, SCHLAEGER_POS_Y + SCHLAEGER_HOEHE, SCHLAEGER_FARBE);
-  buffer_schreiben();
-}
-
-
 void punkte_addieren(int neue_punkte){
   anzahl_punkte += neue_punkte;
   male_punktstand(anzahl_punkte);
