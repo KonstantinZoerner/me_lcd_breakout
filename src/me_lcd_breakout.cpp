@@ -91,13 +91,17 @@ int schlaeger_ermitteln(){
 void ball_richtung_aendern(int bereich){
   if(bereich == 1){
     if (-6 < ball_rx and ball_rx < 9){
-    ball_rx -= 2;
+    ball_rx -= 4;
     ball_ry = -sqrt(GESCHWINDIGKEIT - ball_rx * ball_rx);
+  }else{
+    ball_ry = -ball_ry;
   }
 }else if(bereich == 2){
   if (-6 < ball_rx and ball_rx < 9){
-  ball_rx-- ;
+  ball_rx-= 2 ;
   ball_ry = -sqrt(GESCHWINDIGKEIT - ball_rx * ball_rx);
+}else{
+  ball_ry = -ball_ry;
 }
 }else if(bereich == 3){
 
@@ -106,13 +110,17 @@ void ball_richtung_aendern(int bereich){
 
 }else if(bereich == 4){
   if (-9 < ball_rx and ball_rx < 6){
-  ball_rx++;
+  ball_rx+= 2;
   ball_ry = -sqrt(GESCHWINDIGKEIT - ball_rx * ball_rx);
+}else{
+  ball_ry = -ball_ry;
 }
 }else if(bereich == 5){
   if (-9 < ball_rx and ball_rx < 6){
-  ball_rx += 2;
+  ball_rx += 4;
   ball_ry = -sqrt(GESCHWINDIGKEIT - ball_rx * ball_rx);
+}else{
+  ball_ry = -ball_ry;
 }
 }else{
   ball_ry = -ball_ry;
@@ -136,10 +144,16 @@ void berechneBallPosition() {
         && ball_pos_y + ball_ry + BALL_RADIUS > SCHLAEGER_POS_Y - 1// Ball ist unterhalb der oberen Schlaegergrenze
           && ball_pos_y + ball_ry - BALL_RADIUS < SCHLAEGER_POS_Y + SCHLAEGER_HOEHE - 1
       ) {
+        male_rechteck(0,0,10,10,4);
         int bereich = schlaeger_ermitteln();
+        sprintf(buffer, "DS16(%d,%d,'ber=%d',4);", 10, 0, bereich);
+        buffer_schreiben();
+
       ball_richtung_aendern(bereich);
 
     }
+  } else{
+    male_rechteck(0,0,10,10,0);
   }
 
   // Bewegung X-Richtung
