@@ -1,6 +1,15 @@
 #include <Arduino.h>
 
 #include "konstanten.h"
+#include "anzeige.h"
+#include "spielablauf.h"
+
+// Sachen aus schlaeger.cpp
+//
+extern int schlaeger_x;
+extern int schlaeger_x_alt;
+extern bool berechneSchlaegerPosition();
+
 
 int ball_pos_x;
 int ball_pos_y;
@@ -11,33 +20,8 @@ int ball_pos_y_alt;
 int ball_rx;
 int ball_ry;
 
-// Sachen aus anzeige.cpp
-//
-extern void anzeige_initialisieren();
-extern void buffer_schreiben();
-extern void male_rechteck (int x, int y, int breite, int hoehe, int farbe);
-extern void male_punkte_leiste();
-extern void male_punktstand(int punkte);
-extern void male_level_nr(int lvl);
-extern void male_anzahl_baelle(int anzahl);
-extern void male_rand();
-extern char buffer[];
 
-// Sachen aus schlaeger.cpp
-//
-extern int schlaeger_x;
-extern int schlaeger_x_alt;
-extern bool berechneSchlaegerPosition();
 
-// Sachen aus spielablauf.cpp
-//
-extern void neues_spiel_beginnen();
-extern void neuer_level();
-extern byte stein_liste[ANZAHL_STEIN_REIHEN][STEINE_PRO_REIHE];
-extern int anzahl_punkte;
-extern int anzahl_baelle;
-extern int aktueller_level;
-extern int anzahl_steine;
 
 
 void maleBallNeu() {
@@ -98,10 +82,10 @@ int schlaeger_ermitteln(){
 
 void ball_richtung_aendern(int bereich){
   if(bereich == 1){
-      ball_rx -= 4;
+    ball_rx -= 4;
   }else if(bereich == 2){
     ball_rx-= 3 ;
-  }else if(bereich == 4){
+  }else if(bereich == 3){
     ball_rx-= 2;
   }else if(bereich == 4){
     ball_rx-= 1;
