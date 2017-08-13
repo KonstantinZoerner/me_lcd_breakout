@@ -47,6 +47,7 @@ void steine_initialisieren(int level) {
 }
 
 
+
 void neues_spiel_beginnen() {
   anzahl_baelle   = 3;
   aktueller_level = 1;
