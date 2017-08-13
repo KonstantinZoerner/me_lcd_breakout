@@ -72,59 +72,57 @@ void steineMalen() {
 
 int schlaeger_ermitteln(){
   int linke_ecke = schlaeger_x - SCHLAEGER_BREITE / 2;
-  int bereich_breite = SCHLAEGER_BREITE / 5;
-  if(linke_ecke <= ball_pos_x && ball_pos_x < linke_ecke + bereich_breite){
+  int bereich_breite = SCHLAEGER_BREITE / 9;
+  if (linke_ecke > ball_pos_x){
+    return 1;
+  } else if(linke_ecke <=ball_pos_x && ball_pos_x < linke_ecke + bereich_breite){
     return 1;
   } else if(linke_ecke + bereich_breite <= ball_pos_x && ball_pos_x < linke_ecke + 2 * bereich_breite){
     return 2;
-  } else if(linke_ecke + 2*bereich_breite <= ball_pos_x && ball_pos_x < linke_ecke + 3 * bereich_breite){
+  } else if(linke_ecke + 2 * bereich_breite <= ball_pos_x && ball_pos_x < linke_ecke + 3 * bereich_breite){
     return 3;
-  }else if(linke_ecke + 3*bereich_breite <= ball_pos_x && ball_pos_x < linke_ecke + 4 * bereich_breite){
+  } else if(linke_ecke + 3 * bereich_breite <= ball_pos_x && ball_pos_x < linke_ecke + 4 * bereich_breite){
     return 4;
-  }else if(linke_ecke + 4*bereich_breite <= ball_pos_x && ball_pos_x < linke_ecke + 5 * bereich_breite){
+  } else if(linke_ecke + 4 * bereich_breite <= ball_pos_x && ball_pos_x < linke_ecke + 5 * bereich_breite){
     return 5;
-  }else{
-    return 3;
+  } else if(linke_ecke + 5 * bereich_breite <= ball_pos_x && ball_pos_x < linke_ecke + 6 * bereich_breite){
+    return 6;
+  } else if(linke_ecke + 6 * bereich_breite <= ball_pos_x && ball_pos_x < linke_ecke + 7 * bereich_breite){
+    return 7;
+  } else if(linke_ecke + 7 * bereich_breite <= ball_pos_x && ball_pos_x < linke_ecke + 8 * bereich_breite){
+    return 8;
+  } else{
+    return 9;
   }
 }
 
 void ball_richtung_aendern(int bereich){
   if(bereich == 1){
-    if (-6 < ball_rx and ball_rx < 9){
-    ball_rx -= 4;
-    ball_ry = -sqrt(GESCHWINDIGKEIT - ball_rx * ball_rx);
-  }else{
+      ball_rx -= 4;
+  }else if(bereich == 2){
+    ball_rx-= 3 ;
+  }else if(bereich == 4){
+    ball_rx-= 2;
+  }else if(bereich == 4){
+    ball_rx-= 1;
+  }else if(bereich == 5){
     ball_ry = -ball_ry;
+  }else if(bereich == 6){
+    ball_rx+= 1;
+  }else if(bereich == 7){
+    ball_rx+= 2;
+  }else if(bereich == 8){
+    ball_rx+= 3;
+  }else if(bereich == 9){
+    ball_rx+= 4;
   }
-}else if(bereich == 2){
-  if (-6 < ball_rx and ball_rx < 9){
-  ball_rx-= 2 ;
-  ball_ry = -sqrt(GESCHWINDIGKEIT - ball_rx * ball_rx);
-}else{
-  ball_ry = -ball_ry;
-}
-}else if(bereich == 3){
+  if (ball_rx > MAX_BALL_RX){
+    ball_rx = MAX_BALL_RX;
+  }else if (ball_rx < -MAX_BALL_RX) {
+    ball_rx = -MAX_BALL_RX;
+    }
 
-  ball_rx = ball_rx;
-  ball_ry = -ball_ry;
-
-}else if(bereich == 4){
-  if (-9 < ball_rx and ball_rx < 6){
-  ball_rx+= 2;
   ball_ry = -sqrt(GESCHWINDIGKEIT - ball_rx * ball_rx);
-}else{
-  ball_ry = -ball_ry;
-}
-}else if(bereich == 5){
-  if (-9 < ball_rx and ball_rx < 6){
-  ball_rx += 4;
-  ball_ry = -sqrt(GESCHWINDIGKEIT - ball_rx * ball_rx);
-}else{
-  ball_ry = -ball_ry;
-}
-}else{
-  ball_ry = -ball_ry;
-}
 
 }
 
@@ -150,6 +148,8 @@ void berechneBallPosition() {
         buffer_schreiben();
 
       ball_richtung_aendern(bereich);
+      sprintf(buffer, "DS16(%d,%d,'x_r=%5d',4);", 70, 0, ball_rx);
+      buffer_schreiben();
 
     }
   } else{
