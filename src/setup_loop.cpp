@@ -2,38 +2,29 @@
 
 #include "anzeige.h"
 #include "spielablauf.h"
-
-
-extern bool berechneSchlaegerPosition();
-
 #include "ball.h"
+#include "schlaeger.h"
 
-/**
-Ardunino-Initialisierungsfunktion. Wird beim Start 1x aufgerufen.
+/** Arduino-Initialisierungsfunktion. Wird beim Start 1x aufgerufen.
 */
 void setup() {
 
-neuen_ball_starten();
-
   anzeige_initialisieren();
-
-  neues_spiel_beginnen();
-
+  male_punkte_leiste();
   male_rand();
 
-  male_punkte_leiste();
-  male_punktstand(0);
+  neues_spiel_beginnen();
   male_level_nr(aktueller_level);
-  male_anzahl_baelle(3);
+  male_anzahl_baelle(anzahl_baelle);
 
   maleSchlaegerNeu();
   steineMalen();
+  neuen_ball_starten();
 
   delay(1000);
 }
 
-/**
-Ardunino-Schleife. Wird immer und immer wieder aufgerufen.
+/** Arduino-Schleife. Wird immer und immer wieder aufgerufen.
 */
 void loop() {
   if (anzahl_steine == 0) {
@@ -41,8 +32,6 @@ void loop() {
       neuer_level();
       steineMalen();
       male_level_nr(aktueller_level);
-
-
   }
   berechneBallPosition();
 
@@ -53,9 +42,6 @@ void loop() {
     ball_verlieren();
     neuen_ball_starten();
   }
-
-
-
 
   if (berechneSchlaegerPosition()) {;
         maleSchlaegerNeu();
