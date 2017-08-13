@@ -30,4 +30,7 @@
 #define ANZEIGE_START_Y 307
 
 #define MAX_BAELLE 3
+
+// Ballflugbahn
 #define GESCHWINDIGKEIT 72
+#define MAX_BALL_RX 7
