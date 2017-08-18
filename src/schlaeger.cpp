@@ -8,7 +8,7 @@ int schlaeger_x_alt = 100;
 
 MeJoystick joystick(6);
 
-bool berechneSchlaegerPosition() {
+bool berechne_schlaeger_position() {
 
   int joy_x = joystick.readX();
 
@@ -25,7 +25,7 @@ bool berechneSchlaegerPosition() {
   return schlaeger_x != schlaeger_x_alt;
 }
 
-void maleSchlaegerNeu() {
+void male_schlaeger_neu() {
   sprintf(buffer, "BOXF(%d,%d,%d,%d,%d);BOXF(%d,%d,%d,%d,%d);",schlaeger_x_alt - SCHLAEGER_BREITE/2, SCHLAEGER_POS_Y, schlaeger_x_alt - SCHLAEGER_BREITE/2 + SCHLAEGER_BREITE, SCHLAEGER_POS_Y + SCHLAEGER_HOEHE, 0, schlaeger_x - SCHLAEGER_BREITE/2, SCHLAEGER_POS_Y, schlaeger_x - SCHLAEGER_BREITE/2 + SCHLAEGER_BREITE, SCHLAEGER_POS_Y + SCHLAEGER_HOEHE, SCHLAEGER_FARBE);
   buffer_schreiben();
 }

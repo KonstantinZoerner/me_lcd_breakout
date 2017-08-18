@@ -17,7 +17,7 @@ void setup() {
   male_level_nr(aktueller_level);
   male_anzahl_baelle(anzahl_baelle);
 
-  maleSchlaegerNeu();
+  male_schlaeger_neu();
   steineMalen();
   neuen_ball_starten();
 
@@ -43,8 +43,8 @@ void loop() {
     neuen_ball_starten();
   }
 
-  if (berechneSchlaegerPosition()) {;
-        maleSchlaegerNeu();
+  if (berechne_schlaeger_position()) {;
+        male_schlaeger_neu();
   }
   delay(50);
 }
