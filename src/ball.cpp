@@ -18,7 +18,7 @@ int ball_ry;
 
 
 
-void maleBallNeu() {
+void male_ball_neu() {
     sprintf(buffer, "CIRF(%d,%d,%d,0);CIRF(%d,%d,%d,%d);", ball_pos_x_alt, ball_pos_y_alt, BALL_RADIUS, ball_pos_x, ball_pos_y, BALL_RADIUS, BALL_FARBE);
     buffer_schreiben();
 }
@@ -30,7 +30,7 @@ void punkte_addieren(int neue_punkte){
 }
 
 
-void steineMalen() {
+void steine_malen() {
 
   for (int i=0; i<ANZAHL_STEIN_REIHEN; ++i) {
     for (int j=0; j<STEINE_PRO_REIHE; ++j) {
@@ -122,7 +122,7 @@ void berechneBallPosition() {
 
 
     }
-  } 
+  }
 
   // Bewegung X-Richtung
   //
@@ -323,7 +323,7 @@ void neuen_ball_starten() {
   ball_pos_y_alt = ball_pos_y;
   ball_pos_x = 20;
   ball_pos_y = 170;
-  maleBallNeu();
+  male_ball_neu();
   ball_rx = 6;
   ball_ry = 6;
   ball_pos_x_alt = 20;

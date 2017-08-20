@@ -18,7 +18,7 @@ void setup() {
   male_anzahl_baelle(anzahl_baelle);
 
   male_schlaeger_neu();
-  steineMalen();
+  steine_malen();
   neuen_ball_starten();
 
   delay(1000);
@@ -30,13 +30,13 @@ void loop() {
   if (anzahl_steine == 0) {
       neuen_ball_starten();
       neuer_level();
-      steineMalen();
+      steine_malen();
       male_level_nr(aktueller_level);
   }
   berechneBallPosition();
 
   pruefeBallGegenMauer();
-  maleBallNeu();
+  male_ball_neu();
   if (ball_raus_ueberpruefen()){
     ball_platzen();
     ball_verlieren();
